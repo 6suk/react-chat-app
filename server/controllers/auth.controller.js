@@ -56,7 +56,7 @@ export const login = async (req, res) => {
   }
 };
 
-// Deleted User and LogOut
+// Removed user and LogOut
 export const logout = async (req, res) => {
   try {
     const currentUser = req.user;
