@@ -1,11 +1,11 @@
 import uuid4 from 'uuid4';
 import fs from 'fs-extra';
-// import { jwt } from 'jsonwebtoken';
 
 import {
   setGenerateToken,
-  getAllUser,
   isValidUserName,
+  getOtherUsers,
+  getAllUsers,
 } from '../service/user.service.js';
 
 /**
@@ -46,7 +46,7 @@ export const login = async (req, res) => {
     setGenerateToken({ id: newUser.id, name: newUser.name }, res);
 
     // set json data
-    await fs.writeFile(PATH, JSON.stringify([...getAllUser(), newUser]));
+    await fs.writeFile(PATH, JSON.stringify([...getAllUsers(), newUser]));
     res.status(200).json(newUser);
   } catch (error) {
     console.log('🚨 login Controller Error! : ', error);
@@ -60,9 +60,7 @@ export const login = async (req, res) => {
 export const logout = async (req, res) => {
   try {
     const currentUser = req.user;
-    const newUsersData = getAllUser().filter(
-      user => user.id !== currentUser.id
-    );
+    const newUsersData = getOtherUsers(currentUser.id);
 
     // set json data
     await fs.writeFile(PATH, JSON.stringify(newUsersData));

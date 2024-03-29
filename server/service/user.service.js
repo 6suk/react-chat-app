@@ -2,13 +2,9 @@ import jwt from 'jsonwebtoken';
 
 import userData from '../data/user.json' assert { type: 'json' };
 
-export const getAllUser = () => {
-  return userData;
-};
-
-export const getUserById = id => {
-  return userData.filter(user => user.id === id)[0];
-};
+export const getAllUsers = () => userData;
+export const getOtherUsers = id => userData.filter(user => user.id !== id);
+export const getUserById = id => userData.filter(user => user.id === id)[0];
 
 // 닉네임 중복검사
 export const isValidUserName = name => {
