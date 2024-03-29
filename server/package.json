@@ -1,0 +1,7 @@
+{
+  "name": "server",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "6suk",
+  "license": "MIT"
+}

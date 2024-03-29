@@ -1,0 +1,17 @@
+{
+  "name": "chat-react",
+  "version": "0.0.1",
+  "description": "chat-react-monorepo",
+  "main": "index.js",
+  "author": "6suk",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "client" : "yarn workspaces client",
+    "server" : "yarn workspaces server"
+  }
+}
