@@ -6,7 +6,7 @@ export const otherUsersList = (req, res) => {
     const otherUsers = getOtherUsers(currentUser.id);
     res.status(200).json(otherUsers);
   } catch (error) {
-    console.log('🚨 login Controller Error! : ', error);
+    console.log('🚨 OtherUsersList Controller Error! : ', error);
     res.status(500).json({
       error: 'Server Error!',
     });

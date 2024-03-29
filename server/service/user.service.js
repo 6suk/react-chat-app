@@ -1,10 +1,32 @@
 import jwt from 'jsonwebtoken';
+import fs from 'fs-extra';
 
 import userData from '../data/user.json' assert { type: 'json' };
+const PATH = './data/user.json';
 
 export const getAllUsers = () => userData;
+
 export const getOtherUsers = id => userData.filter(user => user.id !== id);
+
 export const getUserById = id => userData.filter(user => user.id === id)[0];
+
+export const updateUser = async user => {
+  try {
+    await fs.writeFile(PATH, JSON.stringify([...userData, user]));
+  } catch (error) {
+    console.log('🚨 User Service Update User Error! : ', error);
+    throw error;
+  }
+};
+
+export const removeUser = async user => {
+  try {
+    await fs.writeFile(PATH, JSON.stringify(user));
+  } catch (error) {
+    console.log('🚨 User Service Remove User Error! : ', error);
+    throw error;
+  }
+};
 
 // 닉네임 중복검사
 export const isValidUserName = name => {

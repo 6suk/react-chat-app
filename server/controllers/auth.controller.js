@@ -1,11 +1,12 @@
 import uuid4 from 'uuid4';
-import fs from 'fs-extra';
 
 import {
   setGenerateToken,
   isValidUserName,
   getOtherUsers,
   getAllUsers,
+  updateUser,
+  removeUser,
 } from '../service/user.service.js';
 
 /**
@@ -19,8 +20,6 @@ import {
  *    }
  *  ]
  */
-
-const PATH = './data/user.json';
 
 // SingUp and Login
 export const login = async (req, res) => {
@@ -44,9 +43,9 @@ export const login = async (req, res) => {
 
     // set jwt token
     setGenerateToken({ id: newUser.id, name: newUser.name }, res);
-
     // set json data
-    await fs.writeFile(PATH, JSON.stringify([...getAllUsers(), newUser]));
+    await updateUser(newUser);
+
     res.status(200).json(newUser);
   } catch (error) {
     console.log('🚨 login Controller Error! : ', error);
@@ -59,11 +58,10 @@ export const login = async (req, res) => {
 // Removed user and LogOut
 export const logout = async (req, res) => {
   try {
-    const currentUser = req.user;
-    const newUsersData = getOtherUsers(currentUser.id);
+    const user = getOtherUsers(req.user.id);
 
     // set json data
-    await fs.writeFile(PATH, JSON.stringify(newUsersData));
+    await removeUser(user);
 
     res.cookie('jwt', '', { maxAge: 0 });
     res.status(200).json({
