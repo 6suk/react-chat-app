@@ -3,5 +3,11 @@
   "version": "0.0.1",
   "main": "index.js",
   "author": "6suk",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "socketio": "^1.0.0"
+  }
 }
