@@ -12,7 +12,6 @@ import {
  *  [
  *    {
  *      id : UUID, (uni)
- *      socket_id : string,
  *      name : string (uni)
  *      gender : enum ('male', 'female')
  *      profile : string

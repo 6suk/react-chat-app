@@ -1,7 +1,6 @@
 [
   {
     "id": 1,
-    "socket_id": "",
     "name": "user_1",
     "gender": "female",
     "profile": "",
@@ -9,7 +8,6 @@
   },
   {
     "id": 2,
-    "socket_id": "",
     "name": "yelim",
     "gender": "female",
     "profile": "",
