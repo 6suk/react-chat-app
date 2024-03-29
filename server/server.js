@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 
 import authRoute from './routes/auth.route.js';
 import userRoute from './routes/user.route.js';
+import roomRoute from './routes/room.route.js';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use(
 
 app.use('/api/auth', authRoute);
 app.use('/api/user', userRoute);
+app.use('/api/room', roomRoute);
 
 app.get('/', (req, res) => {
   res.send('Hello!!');
