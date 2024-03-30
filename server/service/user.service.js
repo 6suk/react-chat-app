@@ -2,9 +2,19 @@ import jwt from 'jsonwebtoken';
 
 import userData from '../data/user.json' assert { type: 'json' };
 
+import { jsonRemove, jsonUpdate } from '../utils/jsonFileManager.js';
+
+const fileName = 'user.json';
+
 export const getAllUsers = () => userData;
+
 export const getOtherUsers = id => userData.filter(user => user.id !== id);
+
 export const getUserById = id => userData.filter(user => user.id === id)[0];
+
+export const updateUser = async newData => jsonUpdate({ fileName, newData });
+
+export const removeUser = async newData => jsonRemove({ fileName, newData });
 
 // 닉네임 중복검사
 export const isValidUserName = name => {
