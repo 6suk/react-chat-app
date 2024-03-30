@@ -1,13 +1,9 @@
-import {
-  jsonGetOneById,
-  jsonGetOthersById,
-  jsonRemove,
-  jsonUpdate,
-} from '../utils/jsonFileManager.js';
+import JsonFileManager from '../utils/jsonFileManager.js';
 
 const fileName = 'room.json';
+const fm = new JsonFileManager(fileName);
 
-export const updateRoom = async newData => jsonUpdate({ fileName, newData });
-export const removeRoom = async newData => jsonRemove({ fileName, newData });
-export const getOtherRooms = async id => jsonGetOthersById({ fileName, id });
-export const getRoomById = async id => jsonGetOneById({ fileName, id });
+export const updateRoom = newData => fm.appendData(newData);
+export const removeRoom = id => fm.removeDataById(id);
+export const isRoomUnique = (key, value) => fm.isUnique(key, value);
+export const getRoomById = id => fm.getDataById(id);

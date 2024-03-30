@@ -1,18 +1,17 @@
 import uuid from 'uuid4';
 import {
-  getOtherRooms,
   getRoomById,
+  isRoomUnique,
   removeRoom,
   updateRoom,
 } from '../service/room.service.js';
-import { jsonRemove } from '../utils/jsonFileManager.js';
 
 /**
  *  [
  *    {
  *      id : UUID, (uni)
  *      title : string
- *      created_user : user_name
+ *      created_user_id : user_id
  *      created_at : timestamp
  *      updated_at : timestamp
  *      users : user_id array
@@ -53,17 +52,19 @@ export const removedRoom = async (req, res) => {
     const { id } = req.params;
 
     // 방이 존재 하는지
-    const room = await getRoomById(id);
-    if (!room)
+    const isRoomUniqe = await isRoomUnique('id', id);
+
+    if (isRoomUniqe)
       return res.status(401).json({ error: '존재하지 않는 방입니다.' });
 
     // created_user와 요청한 user가 같은지
-    if (req.user.id !== room.created_user_id)
+    const room = await getRoomById(id);
+
+    if (room.created_user_id !== req.user.id)
       return res.status(403).json({ error: '해당 방의 삭제 권한이 없습니다!' });
 
-    const otherRooms = await getOtherRooms(id);
     // set json data
-    await removeRoom(otherRooms);
+    await removeRoom(room.id);
     res.status(200).json({
       room,
       message: '방이 삭제 되었습니다!',

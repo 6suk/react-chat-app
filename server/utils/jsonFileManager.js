@@ -1,50 +1,82 @@
 import fs from 'fs-extra';
 
-const ROOT = './data/';
+const ROOT_DIRECTORY = './data/';
 
-export const jsonUpdate = async ({ fileName, newData }) => {
-  try {
-    const path = `${ROOT}${fileName}`;
-    const buffer = await fs.readFile(path);
-    const data = JSON.parse(buffer.toString());
-
-    await fs.writeFile(path, JSON.stringify([...data, newData]));
-  } catch (error) {
-    console.log('🚨 JSON Update Util Error! : ', error);
-    throw error;
+class JsonFileManager {
+  constructor(fileName) {
+    this.fileName = fileName;
+    this.filePath = `${ROOT_DIRECTORY}${fileName}`;
+    this.cachedData = null;
   }
-};
 
-export const jsonRemove = async ({ fileName, newData }) => {
-  try {
-    const path = `${ROOT}${fileName}`;
-    await fs.writeFile(path, JSON.stringify(newData));
-  } catch (error) {
-    console.log('🚨 JSON remove Util Error! : ', error);
-    throw error;
+  async readFile() {
+    try {
+      const data = await fs.readFile(this.filePath);
+      return JSON.parse(data);
+    } catch (error) {
+      throw new Error(
+        `Error reading JSON file '${this.fileName}': ${error.message}`
+      );
+    }
   }
-};
 
-export const jsonGetOthersById = async ({ fileName, id }) => {
-  try {
-    const path = `${ROOT}${fileName}`;
-    const buffer = await fs.readFile(path);
-    const datas = JSON.parse(buffer.toString());
-    return datas.filter(data => data.id !== id);
-  } catch (error) {
-    console.log('🚨 JSON GetOthers Util Error! : ', error);
-    throw error;
+  async writeFile(data) {
+    try {
+      await fs.writeFile(this.filePath, JSON.stringify(data, null, 2));
+    } catch (error) {
+      throw new Error(
+        `Error writing JSON file '${this.fileName}': ${error.message}`
+      );
+    }
   }
-};
 
-export const jsonGetOneById = async ({ fileName, id }) => {
-  try {
-    const path = `${ROOT}${fileName}`;
-    const buffer = await fs.readFile(path);
-    const datas = JSON.parse(buffer.toString());
-    return datas.filter(data => data.id === id)[0];
-  } catch (error) {
-    console.log('🚨 JSON GetOne Util Error! : ', error);
-    throw error;
+  async readCachedData() {
+    if (!this.cachedData) {
+      this.cachedData = await this.readFile();
+    }
+    return this.cachedData;
   }
-};
+
+  async updateFile(operation) {
+    try {
+      const existingData = await this.readCachedData();
+      await operation(existingData);
+      await this.writeFile(existingData);
+      this.cachedData = existingData; // Update cached data
+    } catch (error) {
+      console.error(`🚨 JSON File Operation Error: ${error}`);
+      throw error;
+    }
+  }
+
+  async appendData(newData) {
+    await this.updateFile(existingData => {
+      existingData.push(newData);
+    });
+  }
+
+  async removeDataById(id) {
+    await this.updateFile(existingData => {
+      return existingData.filter(data => data.id !== id);
+    });
+  }
+
+  async filterDataById(id) {
+    const existingData = await this.readCachedData();
+    return existingData.filter(data => data.id !== id);
+  }
+
+  async getDataById(id) {
+    const existingData = await this.readCachedData();
+    return existingData.find(data => data.id === id);
+  }
+
+  async isUnique(key, value) {
+    const existingData = await this.readCachedData();
+    // 데이터 O : 'false'
+    // 데이터 X : 'true'
+    return !existingData.some(data => data[key] === value);
+  }
+}
+
+export default JsonFileManager;
