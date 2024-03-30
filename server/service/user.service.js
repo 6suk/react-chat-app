@@ -2,15 +2,20 @@ import jwt from 'jsonwebtoken';
 
 import userData from '../data/user.json' assert { type: 'json' };
 
-import { jsonRemove, jsonUpdate } from '../utils/jsonFileManager.js';
+import {
+  jsonGetOneById,
+  jsonGetOthersById,
+  jsonRemove,
+  jsonUpdate,
+} from '../utils/jsonFileManager.js';
 
 const fileName = 'user.json';
 
 export const getAllUsers = () => userData;
 
-export const getOtherUsers = id => userData.filter(user => user.id !== id);
+export const getOtherUsers = async id => jsonGetOthersById({ fileName, id });
 
-export const getUserById = id => userData.filter(user => user.id === id)[0];
+export const getUserById = async id => jsonGetOneById({ fileName, id });
 
 export const updateUser = async newData => jsonUpdate({ fileName, newData });
 

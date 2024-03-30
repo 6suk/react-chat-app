@@ -4,6 +4,6 @@ import { otherUsersList } from '../controllers/user.controller.js';
 
 const router = express.Router();
 
-router.get('/list', protectRoute, otherUsersList);
+router.get('/', protectRoute, otherUsersList);
 
 export default router;

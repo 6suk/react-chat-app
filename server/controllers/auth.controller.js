@@ -58,7 +58,7 @@ export const login = async (req, res) => {
 // Removed user and LogOut
 export const logout = async (req, res) => {
   try {
-    const user = getOtherUsers(req.user.id);
+    const user = await getOtherUsers(req.user.id);
 
     // set json data
     await removeUser(user);
