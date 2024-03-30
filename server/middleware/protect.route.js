@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { getUserById } from '../service/user.service.js';
 
-const protectRoute = (req, res, next) => {
+const protectRoute = async (req, res, next) => {
   try {
     const token = req.cookies.jwt;
 
@@ -13,7 +13,7 @@ const protectRoute = (req, res, next) => {
     if (!decoded)
       return res.status(401).json({ error: '존재하지 않는 토큰입니다.' });
 
-    const user = getUserById(decoded.id);
+    const user = await getUserById(decoded.id);
 
     if (!user)
       return res.status(401).json({ error: '존재하지 않는 유저입니다.' });

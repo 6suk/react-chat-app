@@ -2,9 +2,7 @@ import uuid4 from 'uuid4';
 
 import {
   setGenerateToken,
-  isValidUserName,
-  getOtherUsers,
-  getAllUsers,
+  isUserNameUnique,
   updateUser,
   removeUser,
 } from '../service/user.service.js';
@@ -25,8 +23,9 @@ import {
 export const login = async (req, res) => {
   try {
     const { name, gender } = req.body;
+    const isUnique = await isUserNameUnique('name', name);
 
-    if (!isValidUserName(name)) {
+    if (!isUnique) {
       return res.status(400).json({ error: '중복된 닉네임입니다!' });
     }
 
@@ -44,7 +43,7 @@ export const login = async (req, res) => {
     // set jwt token
     setGenerateToken({ id: newUser.id, name: newUser.name }, res);
     // set json data
-    await updateUser(newUser);
+    updateUser(newUser);
 
     res.status(200).json(newUser);
   } catch (error) {
@@ -58,10 +57,8 @@ export const login = async (req, res) => {
 // Removed user and LogOut
 export const logout = async (req, res) => {
   try {
-    const user = getOtherUsers(req.user.id);
-
     // set json data
-    await removeUser(user);
+    await removeUser(req.user.id);
 
     res.cookie('jwt', '', { maxAge: 0 });
     res.status(200).json({

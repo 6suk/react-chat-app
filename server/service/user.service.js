@@ -1,26 +1,19 @@
 import jwt from 'jsonwebtoken';
-
-import userData from '../data/user.json' assert { type: 'json' };
-
-import { jsonRemove, jsonUpdate } from '../utils/jsonFileManager.js';
+import JsonFileManager from '../utils/jsonFileManager.js';
 
 const fileName = 'user.json';
+const fm = new JsonFileManager(fileName);
 
-export const getAllUsers = () => userData;
+export const getOtherUsers = id => fm.filterDataById(id);
 
-export const getOtherUsers = id => userData.filter(user => user.id !== id);
+export const getUserById = id => fm.getDataById(id);
 
-export const getUserById = id => userData.filter(user => user.id === id)[0];
+export const updateUser = newData => fm.appendData(newData);
 
-export const updateUser = async newData => jsonUpdate({ fileName, newData });
-
-export const removeUser = async newData => jsonRemove({ fileName, newData });
+export const removeUser = id => fm.removeDataById(id);
 
 // 닉네임 중복검사
-export const isValidUserName = name => {
-  const nameSet = new Set(userData.map(user => user.name));
-  return !nameSet.has(name);
-};
+export const isUserNameUnique = (key, value) => fm.isUnique(key, value);
 
 // 토근 생성 및 쿠키 세팅
 export const setGenerateToken = ({ id, name }, res) => {
