@@ -61,10 +61,10 @@ class JsonFileManager {
     });
   }
 
-  async filterDataById(id) {
-    const existingData = await this.readCachedData();
-    return existingData.filter(data => data.id !== id);
-  }
+  // async filterDataById(id) {
+  //   const existingData = await this.readCachedData();
+  //   return existingData.filter(data => data.id !== id);
+  // }
 
   async getDataById(id) {
     const existingData = await this.readCachedData();
