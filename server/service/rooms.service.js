@@ -7,7 +7,9 @@ export const getAllRooms = () => fm.readCachedData();
 
 export const getUserRooms = async user_id => {
   const rooms = await fm.readCachedData();
-  return rooms.filter(data => {
+  const rooms_arr = Object.values(rooms);
+
+  return rooms_arr.filter(data => {
     const userSet = new Set(data.users);
     return userSet.has(user_id);
   });

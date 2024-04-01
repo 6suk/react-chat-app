@@ -40,9 +40,9 @@ class JsonFileManager {
   async updateFile(operation) {
     try {
       const existingData = await this.readCachedData();
-      await operation(existingData);
-      await this.writeFile(existingData);
-      this.cachedData = existingData; // Update cached data
+      const newData = await operation(existingData);
+      await this.writeFile(newData);
+      this.cachedData = newData; // Update cached data
     } catch (error) {
       console.error(`🚨 JSON File Operation Error: ${error}`);
       throw error;
@@ -52,6 +52,7 @@ class JsonFileManager {
   async appendData(newData) {
     await this.updateFile(existingData => {
       existingData.push(newData);
+      return existingData;
     });
   }
 
