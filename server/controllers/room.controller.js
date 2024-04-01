@@ -31,6 +31,7 @@ export const createdRoom = async (req, res) => {
       id: uuid(),
       title,
       created_user_id: currentUser.id,
+      users: [currentUser.id],
       created_at: timestamp,
       updated_at: timestamp,
       messages: [],
@@ -71,6 +72,38 @@ export const removedRoom = async (req, res) => {
     });
   } catch (error) {
     console.log('🚨 RemovedRoom Controller Error! : ', error);
+    res.status(500).json({
+      error: 'Server Error!',
+    });
+  }
+};
+
+export const joinRoom = async (req, res) => {
+  try {
+    const { id } = req.params;
+    // 방이 존재 하는지
+    const isRoomUniqe = await isRoomUnique('id', id);
+
+    if (isRoomUniqe)
+      return res.status(401).json({ error: '존재하지 않는 방입니다.' });
+
+    const room = await getRoomById(id);
+    const joinUsers = new Set(room.users);
+
+    if (joinUsers.has(req.user.id)) {
+      return res.status(200).json({
+        isFirstJoin: false,
+        room,
+      });
+    }
+
+    room.users.push(req.user.id);
+    res.status(200).json({
+      isFirstJoin: true,
+      room,
+    });
+  } catch (error) {
+    console.log('🚨 enteredRoom Controller Error! : ', error);
     res.status(500).json({
       error: 'Server Error!',
     });
