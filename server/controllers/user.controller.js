@@ -1,9 +1,9 @@
-import { getOtherUsers } from '../service/user.service.js';
+import { filterUserById } from '../service/user.service.js';
 
-export const otherUsersList = (req, res) => {
+export const otherUsersList = async (req, res) => {
   try {
     const currentUser = req.user;
-    const otherUsers = getOtherUsers(currentUser.id);
+    const otherUsers = await filterUserById(currentUser.id);
     res.status(200).json(otherUsers);
   } catch (error) {
     console.log('🚨 OtherUsersList Controller Error! : ', error);
