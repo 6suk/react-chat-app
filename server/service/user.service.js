@@ -4,16 +4,18 @@ import JsonFileManager from '../utils/jsonFileManager.js';
 const fileName = 'user.json';
 const fm = new JsonFileManager(fileName);
 
-export const getOtherUsers = id => fm.filterDataById(id);
-
 export const getUserById = id => fm.getDataById(id);
 
 export const updateUser = newData => fm.appendData(newData);
 
 export const removeUser = id => fm.removeDataById(id);
 
-// 닉네임 중복검사
 export const isUserNameUnique = (key, value) => fm.isUnique(key, value);
+
+export const filterUserById = async id => {
+  const users = await fm.readCachedData();
+  return users.filter(data => data.id !== id);
+};
 
 // 토근 생성 및 쿠키 세팅
 export const setGenerateToken = ({ id, name }, res) => {
