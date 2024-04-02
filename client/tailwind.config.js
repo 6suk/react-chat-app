@@ -11,11 +11,14 @@ export default {
       {
         mytheme: {
           primary: '#cddeff',
-          'primary-content': '#5a81fa ',
-          secondary: '#2C3D8F',
+          'primary-content': '#5a81fa',
+          // secondary: '#2c3d8f',
+          // 'secondary-content': '#f2f5ff',
+          secondary: '#5a81fa',
           'secondary-content': '#f2f5ff',
           accent: '#00ffff',
-          neutral: '#ff00ff',
+          neutral: '#eeeeee',
+          'neutral-content': '#1f1f1f',
           'base-100': '#ffffff',
           'base-200': '#f8f9fd',
           'base-300': '#f2f5ff',
