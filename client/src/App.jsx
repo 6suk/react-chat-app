@@ -1,13 +1,19 @@
 import { Route, Routes } from 'react-router-dom';
-import Init from './pages/Init';
-import Container from './components/common/Container';
+import { Toaster } from 'react-hot-toast';
+
+import Auth from './pages/Auth';
+import Chat from './pages/Chat';
 
 export default function App() {
   return (
     <>
-      <Routes>
-        <Route path="/" element={<Init />} />
-      </Routes>
+      <div className="flex h-screen items-center justify-center p-4">
+        <Routes>
+          <Route path="/" element={<Chat />} />
+          <Route path="/login" element={<Auth />} />
+        </Routes>
+        <Toaster />
+      </div>
     </>
   );
 }
