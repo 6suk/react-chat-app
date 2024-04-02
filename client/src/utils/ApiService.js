@@ -11,6 +11,7 @@ class ApiService {
       const response = await fetch(`${this.baseURL}${url}`, {
         ...options,
         headers: this.headers,
+        credentials: 'include',
       });
 
       const json = await response.json();
@@ -32,7 +33,6 @@ class ApiService {
   }
 
   async fetchPost(url, options = {}) {
-    console.log('🚀 ~ ApiService ~ fetchPost ~ options:', options);
     return this.fetchData(url, { method: 'POST', ...options });
   }
 }

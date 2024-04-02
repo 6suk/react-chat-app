@@ -2,20 +2,20 @@ import { useState } from 'react';
 import useLogin from '../hooks/useLogin';
 
 const Auth = () => {
-  const [userName, setUserName] = useState('');
+  const [userName, setName] = useState('');
   const [gender, setGender] = useState('');
   const { isLoading, login } = useLogin();
 
   const handleSubmit = async e => {
     e.preventDefault();
     await login(userName, gender);
-    setUserName('');
+    setName('');
     setGender('');
   };
 
   return (
     <>
-      <div className="flex h-1/2 w-full overflow-hidden rounded-lg bg-gray-400 bg-opacity-10 bg-clip-padding backdrop-blur-lg backdrop-filter sm:w-[580px]">
+      <div className="flex h-1/2 w-full overflow-hidden rounded-lg bg-white bg-opacity-10 bg-clip-padding backdrop-blur-lg backdrop-filter sm:w-[580px]">
         <form
           className="flex w-full flex-col items-center justify-center gap-4 px-20"
           onSubmit={handleSubmit}
@@ -29,7 +29,7 @@ const Auth = () => {
               name="name"
               className="input input-bordered w-full"
               placeholder="닉네임"
-              onChange={e => setUserName(e.target.value)}
+              onChange={e => setName(e.target.value)}
               value={userName}
             />
           </div>
