@@ -23,6 +23,12 @@ import {
 export const login = async (req, res) => {
   try {
     const { name, gender } = req.body;
+    if (!name || !gender) {
+      return res
+        .status(400)
+        .json({ error: '닉네임 및 성별은 필수 항목입니다!' });
+    }
+
     const isUnique = await isUserNameUnique('name', name);
 
     if (!isUnique) {
