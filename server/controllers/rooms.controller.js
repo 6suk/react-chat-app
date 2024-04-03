@@ -18,7 +18,9 @@ import { getAllRooms } from '../service/rooms.service.js';
 export const getRooms = async (req, res) => {
   try {
     const data = await getAllRooms();
-    res.status(200).json({ rooms: data });
+    const dataArray = Object.keys(data).map(key => data[key]);
+
+    res.status(200).json({ rooms: dataArray });
   } catch (error) {
     console.log('🚨 GetAllRooms Controller Error! : ', error);
     res.status(500).json({
