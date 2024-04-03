@@ -2,8 +2,8 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
 import Auth from './pages/Auth';
-import Chat from './pages/Chat';
 import { useAuthContext } from './context/AuthContext';
+import Home from './pages/Home';
 
 export default function App() {
   const { authUser } = useAuthContext();
@@ -14,7 +14,7 @@ export default function App() {
         <Routes>
           <Route
             path="/"
-            element={authUser ? <Chat /> : <Navigate to="/login" />}
+            element={authUser ? <Home /> : <Navigate to="/login" />}
           />
           <Route
             path="/login"
