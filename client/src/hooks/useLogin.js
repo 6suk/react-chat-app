@@ -1,28 +1,32 @@
 import { useState } from 'react';
-import toast from 'react-hot-toast';
 
-import ApiService from '../utils/ApiService';
+import toast from 'react-hot-toast';
 import { useAuthContext } from '../context/AuthContext';
+import APIService from '../utils/APIService';
 
 const useLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { setAuthUser } = useAuthContext();
-  const as = new ApiService();
+  const as = new APIService();
 
   const login = async (name, gender) => {
     try {
       setIsLoading(true);
       handleInputErrors(name, gender);
 
-      const user = await as.fetchPost('/auth/login', {
+      const response = await as.post('/auth/login', {
         body: JSON.stringify({
           name,
           gender,
         }),
       });
 
-      setAuthUser(user);
-      localStorage.setItem('user', JSON.stringify(user));
+      if (response) {
+        setAuthUser(response);
+        localStorage.setItem('user', JSON.stringify(response));
+      } else {
+        throw new Error(response.error || '다시 시도해주세요!');
+      }
     } catch (error) {
       console.log('🚨 useLogin Error', error.message);
       toast.error(error.message);

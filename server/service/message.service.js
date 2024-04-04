@@ -3,26 +3,26 @@ import JsonFileManager from '../utils/jsonFileManager.js';
 const fileName = 'message.json';
 const fm = new JsonFileManager(fileName);
 
-export const updateMessage = async newData => {
-  const id = newData.room;
+export const updateMessage = async message => {
+  const roomId = message.room;
 
-  await fm.updateFile(existingData => {
-    const appendData = {
-      [id]: [newData],
+  await fm.updateFile(messages => {
+    const newMessage = {
+      [roomId]: [message],
     };
 
-    const findMessagesByRoom = existingData[id];
+    const messagesByRoomId = messages[roomId];
 
-    if (!findMessagesByRoom) {
-      return { ...existingData, ...appendData };
+    if (!messagesByRoomId) {
+      return { ...messages, ...newMessage };
     }
 
-    findMessagesByRoom.push(newData);
-    return existingData;
+    messagesByRoomId.push(message);
+    return messages;
   });
 };
 
 export const getMessagesByRoomId = async roomId => {
-  const messages = await fm.readCachedData();
-  return messages[roomId];
+  const roomsMessages = await fm.readCachedData();
+  return roomsMessages[roomId];
 };

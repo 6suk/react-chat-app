@@ -53,7 +53,7 @@ export const login = async (req, res) => {
 
     res.status(200).json(newUser);
   } catch (error) {
-    console.log('🚨 login Controller Error! : ', error);
+    console.log('🚨 Auth Controller Error! : ', error);
     res.status(500).json({
       error: 'Server Error!',
     });
