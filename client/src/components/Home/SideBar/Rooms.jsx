@@ -1,9 +1,24 @@
+import { useEffect, useState } from 'react';
 import useGetRooms from '../../../hooks/useGetRooms';
+import useRoomStore from '../../../store/useRoomStore';
 import getRandomEmojis from '../../../utils/getRandomEmojis';
 import Room from './Room';
+import { useAuthContext } from '../../../context/AuthContext';
 
 const Rooms = () => {
   const { isLoading, rooms } = useGetRooms();
+  const { currentRoom, setCurrentRoom, updateRooms, removeUpdateRooms } =
+    useRoomStore();
+  const [emojisByRoom, setEmojisByRoom] = useState({});
+  const { authUser } = useAuthContext();
+
+  useEffect(() => {
+    const emojisMap = {};
+    rooms.forEach(room => {
+      emojisMap[room.id] = getRandomEmojis();
+    });
+    setEmojisByRoom(emojisMap);
+  }, [rooms]);
 
   return (
     <>
@@ -16,8 +31,13 @@ const Rooms = () => {
               <Room
                 key={room.id}
                 room={room}
-                emoji={getRandomEmojis()}
+                emoji={emojisByRoom[room.id]}
+                setCurrentRoom={setCurrentRoom}
+                removeUpdateRooms={removeUpdateRooms}
                 isLast={index === rooms.length - 1}
+                isCurrent={currentRoom?.id === room.id}
+                isUpdate={updateRooms.includes(room.id)}
+                isJoined={room.users.includes(authUser.id)}
               />
             );
           })}
