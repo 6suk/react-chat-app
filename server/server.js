@@ -1,17 +1,12 @@
-import cookieParser from 'cookie-parser';
-import cors from 'cors';
-import dotenv from 'dotenv';
 import express from 'express';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 import authRoute from './routes/auth.route.js';
 import roomRoute from './routes/room.route.js';
 import roomsRoute from './routes/rooms.route.js';
 import userRoute from './routes/user.route.js';
-
-dotenv.config();
-
-const app = express();
-const PORT = process.env.PORT || 3001;
+import { app, server } from './socket/socket.js';
 
 app.use(express.json());
 app.use(cookieParser());
@@ -31,6 +26,8 @@ app.get('/', (req, res) => {
   res.send('Hello!!');
 });
 
-app.listen(PORT, () => {
-  console.log(`🎉 Server Runnig : http://localhost:${PORT}`);
+const PORT = process.env.PORT || 3001;
+
+server.listen(PORT, () => {
+  console.log(`🎉 server Runnig : http://localhost:${PORT}`);
 });

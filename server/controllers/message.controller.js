@@ -1,8 +1,10 @@
+import uuid4 from 'uuid4';
+import { io } from '../socket/socket.js';
 import {
   getMessagesByRoomId,
   updateMessage,
 } from '../service/message.service.js';
-import { getJoinUsers } from '../service/room.service.js';
+import { formatAddUser, formatAddUsers } from '../utils/addUserUtils.js';
 
 /**
  *  room_id {
@@ -22,26 +24,24 @@ import { getJoinUsers } from '../service/room.service.js';
 
 export const sendMessage = async (req, res) => {
   try {
-    const { id: roomId } = req.params;
-    const joinUsers = await getJoinUsers(roomId);
-    const joinUsersSet = new Set(joinUsers);
-    const userId = req.user.id;
-
-    if (!joinUsersSet.has(userId)) {
-      return res.status(401).json({ error: '방에 입장하지 않은 유저입니다.' });
-    }
-
+    const room = req.room;
     const newMessage = {
-      room: roomId,
+      id: uuid4(),
+      room: room.id,
       from: req.user.id,
-      to: joinUsers,
+      to: req.room.users,
       created_at: Date.now(),
       content: req.body.content,
     };
 
+    // set json
     await updateMessage(newMessage);
+
+    // response formatting!
+    const responseMessage = await formatAddUser(newMessage, 'from');
+    io.to(room.id).emit('message', responseMessage);
     res.status(200).json({
-      msg: newMessage,
+      message: responseMessage,
     });
   } catch (error) {
     console.log('🚨 sendMessage Controller Error! : ', error);
@@ -54,9 +54,17 @@ export const sendMessage = async (req, res) => {
 export const getMessages = async (req, res) => {
   try {
     const { id } = req.params;
-    const messages = await getMessagesByRoomId(id);
+    const { room, isFirstJoin } = req;
 
-    res.status(200).json(messages);
+    const messages = await getMessagesByRoomId(id);
+    let responseMessages = [];
+
+    // response formatting!
+    if (messages) {
+      responseMessages = await formatAddUsers(messages, 'from');
+    }
+
+    res.status(200).json({ isFirstJoin, room, messages: responseMessages });
   } catch (error) {
     console.log('🚨 getMessages Controller Error! : ', error);
     res.status(500).json({

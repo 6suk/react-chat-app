@@ -1,4 +1,4 @@
-import { filterUserById } from '../service/user.service.js';
+import { filterUserById, setUserRooms } from '../service/user.service.js';
 
 export const otherUsersList = async (req, res) => {
   try {
@@ -11,4 +11,9 @@ export const otherUsersList = async (req, res) => {
       error: 'Server Error!',
     });
   }
+};
+
+export const userJoinRoom = async (req, res, next) => {
+  if (req.isFirstJoin) await setUserRooms(req.user.id, req.room.id);
+  next();
 };
