@@ -26,7 +26,14 @@ export const getRoomById = async id => {
   return rooms[id];
 };
 
-export const getJoinUsers = async id => {
-  const room = await getRoomById(id);
-  return room.users;
+export const getAllRooms = async () => await fm.readCachedData();
+
+export const getUserRooms = async user_id => {
+  const rooms = await fm.readCachedData();
+  const rooms_arr = Object.values(rooms);
+
+  return rooms_arr.filter(data => {
+    const userSet = new Set(data.users);
+    return userSet.has(user_id);
+  });
 };
