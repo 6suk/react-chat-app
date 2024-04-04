@@ -17,6 +17,15 @@ export const filterUserById = async id => {
   return users.filter(data => data.id !== id);
 };
 
+// Join 시 User Data Rooms 추가
+export const setUserRooms = async (id, roomId) => {
+  await fm.updateFile(users => {
+    const targetUserIndex = users.findIndex(user => user.id === id);
+    users[targetUserIndex].rooms.push(roomId);
+    return users;
+  });
+};
+
 // 토근 생성 및 쿠키 세팅
 export const setGenerateToken = ({ id, name }, res) => {
   const token = jwt.sign({ id, name }, process.env.JWT_SECRET, {

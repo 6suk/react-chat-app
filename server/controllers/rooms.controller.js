@@ -1,5 +1,5 @@
-import { getUserRooms } from '../service/rooms.service.js';
-import { getAllRooms } from '../service/rooms.service.js';
+import { getAllRooms, getUserRooms } from '../service/room.service.js';
+import { convertObjToArr, formatAddUsers } from '../utils/addUserUtils.js';
 
 /**
  *  [
@@ -17,10 +17,20 @@ import { getAllRooms } from '../service/rooms.service.js';
 
 export const getRooms = async (req, res) => {
   try {
-    const data = await getAllRooms();
-    const dataArray = Object.keys(data).map(key => data[key]);
+    const roomsObj = await getAllRooms();
 
-    res.status(200).json({ rooms: dataArray });
+    // response formatting!
+    const rooms = convertObjToArr(roomsObj);
+    let responseRooms = [];
+
+    if (rooms) {
+      responseRooms = await formatAddUsers(
+        rooms,
+        'created_user_id',
+        'createdUser'
+      );
+    }
+    res.status(200).json({ rooms: responseRooms });
   } catch (error) {
     console.log('🚨 GetAllRooms Controller Error! : ', error);
     res.status(500).json({
