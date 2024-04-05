@@ -35,8 +35,10 @@ io.on('connection', async socket => {
 
   socket.on('refresh', () => {
     if (joinedRooms.length > 0) {
+      socket.join(joinedRooms);
+
       console.log(
-        `💡 connet! : [${user.name}]님이 기존 참여했던 방에 입장하셨습니다`
+        `💡 connect! : [${user.name}]님이 기존 참여했던 방에 입장하셨습니다`
       );
     }
   });
