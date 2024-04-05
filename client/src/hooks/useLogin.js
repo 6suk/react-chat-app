@@ -21,12 +21,12 @@ const useLogin = () => {
         }),
       });
 
-      if (response) {
-        setAuthUser(response);
-        localStorage.setItem('user', JSON.stringify(response));
-      } else {
+      if (response.error) {
         throw new Error(response.error || '다시 시도해주세요!');
       }
+
+      setAuthUser(response);
+      localStorage.setItem('user', JSON.stringify(response));
     } catch (error) {
       console.log('🚨 useLogin Error', error.message);
       toast.error(error.message);
