@@ -6,6 +6,8 @@ import {
   updateRoom,
 } from '../service/room.service.js';
 import { io } from '../socket/socket.js';
+import { formatAddUser } from '../utils/addUserUtils.js';
+import { setAdminMessage } from '../utils/setAdminMessage.js';
 
 /**
  *  [
@@ -21,28 +23,43 @@ import { io } from '../socket/socket.js';
  *  ]
  */
 
-export const createdRoom = async (req, res) => {
+export const createdRoom = async (req, res, next) => {
   try {
     const { title } = req.body;
 
-    const currentUser = req.user;
+    const user = req.user;
     const timestamp = Date.now();
     const id = uuid();
 
-    const newRoom = {
+    const room = {
       id,
       title,
-      created_user_id: currentUser.id,
-      users: [currentUser.id],
+      created_user_id: user.id,
+      users: [user.id],
       created_at: timestamp,
       updated_at: timestamp,
       messages: [],
     };
 
+    // reponse formatting!
+    const responseRoom = await formatAddUser(
+      room,
+      'created_user_id',
+      'createdUser'
+    );
+    req.room = responseRoom;
+
     // set json data
-    await updateRoom({ [id]: newRoom });
-    // io.to(id).emit('message', `[${title}] 방을 개설하셨습니다!`);
-    res.status(200).json(newRoom);
+    await updateRoom({ [id]: room });
+
+    // socket - send admin message
+    setAdminMessage(
+      room,
+      `${user.name}님이 [${room.title}] 방을 생성하셨습니다!`
+    );
+    io.sockets.emit('new room', responseRoom);
+
+    next();
   } catch (error) {
     console.log('🚨 CreatedRoom Controller Error! : ', error);
     res.status(500).json({
@@ -104,7 +121,6 @@ export const joinRoom = async (req, res, next) => {
     }
     // room 정보 보내기
     req.room = room;
-
     next();
   } catch (error) {
     console.log('🚨 Join Room Controller Error! : ', error);
