@@ -39,3 +39,15 @@ export const setGenerateToken = ({ id, name }, res) => {
     secure: process.env.NODE_ENV !== 'development',
   });
 };
+
+export const setAdmin = async () => {
+  const admin = {
+    id: 'admin',
+    name: '관리자',
+    gender: 'male',
+    profile: 'https://avatar.iran.liara.run/public/boy?username=admin',
+    rooms: [],
+  };
+
+  await fm.appendData(admin);
+};

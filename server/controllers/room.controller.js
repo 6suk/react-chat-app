@@ -6,6 +6,8 @@ import {
   updateRoom,
 } from '../service/room.service.js';
 import { io } from '../socket/socket.js';
+import { formatAddUser } from '../utils/addUserUtils.js';
+import { setAdminMessage } from '../utils/setAdminMessage.js';
 
 /**
  *  [
@@ -21,28 +23,43 @@ import { io } from '../socket/socket.js';
  *  ]
  */
 
-export const createdRoom = async (req, res) => {
+export const createdRoom = async (req, res, next) => {
   try {
     const { title } = req.body;
 
-    const currentUser = req.user;
+    const user = req.user;
     const timestamp = Date.now();
     const id = uuid();
 
-    const newRoom = {
+    const room = {
       id,
       title,
-      created_user_id: currentUser.id,
-      users: [currentUser.id],
+      created_user_id: user.id,
+      users: [user.id],
       created_at: timestamp,
       updated_at: timestamp,
       messages: [],
     };
 
+    // reponse formatting!
+    const responseRoom = await formatAddUser(
+      room,
+      'created_user_id',
+      'createdUser'
+    );
+    req.room = responseRoom;
+
     // set json data
-    await updateRoom({ [id]: newRoom });
-    // io.to(id).emit('message', `[${title}] 방을 개설하셨습니다!`);
-    res.status(200).json(newRoom);
+    await updateRoom({ [id]: room });
+
+    // socket - send admin message
+    setAdminMessage(
+      room,
+      `${user.name}님이 [${room.title}] 방을 생성하셨습니다!`
+    );
+    io.sockets.emit('new room', responseRoom);
+
+    next();
   } catch (error) {
     console.log('🚨 CreatedRoom Controller Error! : ', error);
     res.status(500).json({
@@ -91,20 +108,14 @@ export const joinRoom = async (req, res, next) => {
       return res.status(401).json({ error: '존재하지 않는 방입니다.' });
 
     const room = await getRoomById(id);
-    const joinUsers = new Set(room.users);
-
-    if (joinUsers.has(req.user.id)) {
-      req.isFirstJoin = false;
-    } else {
-      req.isFirstJoin = true;
-
+    if (!room.users.includes(req.user.id)) {
       // set json
       room.users.push(req.user.id);
       await updateRoom({ [id]: room });
     }
+
     // room 정보 보내기
     req.room = room;
-
     next();
   } catch (error) {
     console.log('🚨 Join Room Controller Error! : ', error);
@@ -113,42 +124,3 @@ export const joinRoom = async (req, res, next) => {
     });
   }
 };
-
-// export const joinRoom = async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     // 방이 존재 하는지
-//     const isRoomUniqe = await isRoomUnique(id);
-
-//     if (isRoomUniqe)
-//       return res.status(401).json({ error: '존재하지 않는 방입니다.' });
-
-//     const room = await getRoomById(id);
-//     const joinUsers = new Set(room.users);
-
-//     if (joinUsers.has(req.user.id)) {
-//       return res.status(200).json({
-//         isFirstJoin: false,
-//         room,
-//       });
-//     }
-
-//     room.users.push(req.user.id);
-//     console.log(room);
-
-//     // set json
-//     await updateRoom({ [id]: room });
-
-//     // 첫 입장 시 메세지 보내기
-//     io.to(id).emit('sendMessage', `${req.user.name}님이 입장하셨습니다!`);
-//     res.status(200).json({
-//       isFirstJoin: true,
-//       room,
-//     });
-//   } catch (error) {
-//     console.log('🚨 Join Room Controller Error! : ', error);
-//     res.status(500).json({
-//       error: 'Server Error!',
-//     });
-//   }
-// };

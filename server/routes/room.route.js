@@ -6,12 +6,15 @@ import {
   removedRoom,
 } from '../controllers/room.controller.js';
 import protectRoute from '../middleware/protect.route.js';
-import { userJoinRoom } from '../controllers/user.controller.js';
+import {
+  userCreateRoom,
+  userJoinRoom,
+} from '../controllers/user.controller.js';
 
 const router = express.Router();
 
 // Room
-router.post('/', protectRoute, createdRoom);
+router.post('/', protectRoute, createdRoom, userCreateRoom);
 router.delete('/:id', protectRoute, removedRoom);
 
 // Message

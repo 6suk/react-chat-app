@@ -54,7 +54,7 @@ export const sendMessage = async (req, res) => {
 export const getMessages = async (req, res) => {
   try {
     const { id } = req.params;
-    const { room, isFirstJoin } = req;
+    const { room } = req;
 
     const messages = await getMessagesByRoomId(id);
     let responseMessages = [];
@@ -64,7 +64,7 @@ export const getMessages = async (req, res) => {
       responseMessages = await formatAddUsers(messages, 'from');
     }
 
-    res.status(200).json({ isFirstJoin, room, messages: responseMessages });
+    res.status(200).json({ room, messages: responseMessages });
   } catch (error) {
     console.log('🚨 getMessages Controller Error! : ', error);
     res.status(500).json({

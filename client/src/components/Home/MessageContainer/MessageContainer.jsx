@@ -1,17 +1,18 @@
 import { useEffect, useRef } from 'react';
 
+import { useAuthContext } from '../../../context/AuthContext';
 import useRealTimeMessages from '../../../hooks/useRealTimeMessages';
 import useRoomMessages from '../../../hooks/useRoomMessages';
 import useRoomStore from '../../../store/useRoomStore';
 import ChatInput from './ChatInput';
 import ChatTopInfo from './ChatTopInfo';
 import Message from './Message';
-import { useAuthContext } from '../../../context/AuthContext';
 
 const MessageContainer = () => {
   const { currentRoom, messages } = useRoomStore();
   const { isLoading } = useRoomMessages();
   useRealTimeMessages();
+
   const lastMessageRef = useRef();
 
   useEffect(() => {
@@ -51,7 +52,7 @@ const NoSelectedRoom = () => {
   const { authUser } = useAuthContext();
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-2 border-l border-gray-300  px-8 py-6 text-center text-white opacity-90">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-2 border-t border-gray-300 px-8  py-6 text-center text-white opacity-90 md:border-l md:border-t-0">
       <h1 className="text-4xl">🤙🏻</h1>
       <h1 className="text-4xl font-light">
         안녕하세요! <span className="font-bold">{authUser.name}</span>님!

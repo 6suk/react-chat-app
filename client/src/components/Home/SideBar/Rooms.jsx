@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
+import { useAuthContext } from '../../../context/AuthContext';
 import useGetRooms from '../../../hooks/useGetRooms';
 import useRoomStore from '../../../store/useRoomStore';
 import getRandomEmojis from '../../../utils/getRandomEmojis';
 import Room from './Room';
-import { useAuthContext } from '../../../context/AuthContext';
 
 const Rooms = () => {
   const { isLoading, rooms } = useGetRooms();

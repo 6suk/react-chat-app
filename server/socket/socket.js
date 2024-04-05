@@ -2,10 +2,9 @@ import dotenv from 'dotenv';
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
-import uuid4 from 'uuid4';
-import { updateMessage } from '../service/message.service.js';
 import { getRoomById } from '../service/room.service.js';
 import { getUserById } from '../service/user.service.js';
+import { setAdminMessage } from '../utils/setAdminMessage.js';
 
 dotenv.config();
 
@@ -30,56 +29,42 @@ io.on('connection', async socket => {
   console.log('🚀 user connected! : ', socket.id);
 
   const userId = socket.handshake.query.userId;
-  const user = await getUser(userId);
-  const joinedRooms = user.rooms;
 
-  socket.on('refresh', () => {
+  socket.on('refresh', async () => {
+    const user = await getUser(userId);
+    const joinedRooms = user.rooms || [];
+
     if (joinedRooms.length > 0) {
+      socket.join(joinedRooms);
       console.log(
-        `💡 connet! : [${user.name}]님이 기존 참여했던 방에 입장하셨습니다`
+        `💡 connect! : [${user.name}]님이 기존 참여했던 방에 입장하셨습니다`
       );
     }
   });
 
   socket.on('join', async roomId => {
+    const user = await getUser(userId);
+    const room = await getRoom(roomId);
+
+    const joinedRooms = user.rooms || [];
     const isJoined = joinedRooms.includes(roomId);
 
     if (!isJoined) {
-      const room = await getRoom(roomId);
-      socket.join(roomId);
-
-      // send admin Message
-      const adminMessage = setAdminMessage(
-        room,
-        `${user.name}님이 입장하셨습니다!`
-      );
-
-      io.to(roomId).emit('message', adminMessage);
-      // set json - admin message
-      await updateMessage(adminMessage);
-
+      // send Admin Message
+      setAdminMessage(room, `${user.name}님이 입장하셨습니다!`);
       console.log(
         `💡 new Join! : [${user.name}]님이 [${room.title}]방에 입장하셨습니다`
       );
+
+      // (임시) room 입장 시 rooms 반환 => 참여 유저가 실시간으로 연동 되어야함
+      io.sockets.emit('new join', { room_id: room.id, user_name: user.name });
     }
+    socket.join(roomId);
   });
 
   socket.on('disconnect', () => {
     console.log('🚀 user disconnected! : ', socket.id);
   });
 });
-
-const setAdminMessage = (room, message) => {
-  const adminMessage = {
-    id: uuid4(),
-    room: room.id,
-    from: 'admin',
-    to: room.users,
-    created_at: Date.now(),
-    content: message,
-  };
-
-  return adminMessage;
-};
 
 export { app, io, server };
