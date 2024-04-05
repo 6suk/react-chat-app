@@ -3,10 +3,9 @@ import formatTimestamp from '../../../utils/formatTimestamp';
 
 const Message = ({ message }) => {
   const { authUser } = useAuthContext();
-  const isAdmin = message.from.id === 'admin' || message.from === 'admin';
+  const isAdmin = message.from.id === 'admin';
   const chatClassName =
     message.from.id === authUser.id ? 'chat-end' : 'chat-start';
-
   const bubbleClassName = message.from.id === authUser.id && 'bg-primary';
 
   return (
