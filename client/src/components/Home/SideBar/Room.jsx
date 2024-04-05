@@ -10,7 +10,7 @@ const Room = ({
 }) => {
   return (
     <>
-      <div
+      <li
         className={`flex cursor-pointer items-center justify-between rounded px-5 py-4 text-white transition duration-300 ease-in-out hover:bg-primary-content hover:text-white
           ${isCurrent && 'bg-primary-content'}`}
         onClick={() => {
@@ -27,7 +27,7 @@ const Room = ({
           )}
           {/* {room.users.length}명 */}
         </p>
-      </div>
+      </li>
       {!isLast && <div className="w-full border-b border-white opacity-30" />}
     </>
   );

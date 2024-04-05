@@ -25,7 +25,7 @@ const Rooms = () => {
       {isLoading ? (
         <p className="loading loading-dots loading-lg mx-auto flex h-full items-center justify-center text-primary opacity-80"></p>
       ) : (
-        <div className="flex flex-col overflow-auto py-2">
+        <ul className="flex flex-col py-2">
           {rooms.map((room, index) => {
             return (
               <Room
@@ -41,7 +41,7 @@ const Rooms = () => {
               />
             );
           })}
-        </div>
+        </ul>
       )}
     </>
   );

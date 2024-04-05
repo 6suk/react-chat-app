@@ -10,16 +10,14 @@ const CreateRoomModal = ({ modalOpen, setModalOpen }) => {
     <dialog id="my_modal_1" className={`modal ${modalOpen && 'modal-open'}`}>
       <div className="modal-box relative flex flex-col items-center gap-6 py-8 pt-10">
         <h1 className="text-2xl font-bold">채팅방 생성</h1>
-        <div className="w-full">
-          <input
-            type="text"
-            placeholder="채팅방 제목"
-            className="input w-full bg-secondary-content focus:outline-none disabled:bg-gray-200"
-            onChange={e => setTitle(e.target.value)}
-            value={title}
-            disabled={isLoading}
-          />
-        </div>
+        <input
+          type="text"
+          placeholder="채팅방 제목"
+          className="input mx-auto w-5/6 bg-secondary-content focus:outline-none disabled:bg-gray-200"
+          onChange={e => setTitle(e.target.value)}
+          value={title}
+          disabled={isLoading}
+        />
         <div className="modal-action m-0 w-full justify-center">
           {!isLoading ? (
             <button
