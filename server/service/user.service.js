@@ -19,21 +19,34 @@ export const filterUserById = async id => {
 
 // Join 시 User Data Rooms 추가
 export const setUserRooms = async (id, roomId) => {
+  const updateUser = user => {
+    if (user.id === id)
+      return {
+        ...user,
+        rooms: [...user.rooms, roomId],
+      };
+    return user;
+  };
+
   await fm.updateFile(users => {
-    const targetUserIndex = users.findIndex(user => user.id === id);
-    users[targetUserIndex].rooms.push(roomId);
-    return users;
+    const updateUsers = users.map(user => {
+      return updateUser(user);
+    });
+    return updateUsers;
   });
 };
 
 // 토근 생성 및 쿠키 세팅
 export const setGenerateToken = ({ id, name }, res) => {
+  const maxAge_15d = 1000 * 60 * 60 * 24 * 15; // 15일
+  const maxAge = 1000 * 10; // 10초
+
   const token = jwt.sign({ id, name }, process.env.JWT_SECRET, {
-    expiresIn: '15d',
+    expiresIn: maxAge,
   });
 
   res.cookie('jwt', token, {
-    maxAge: 1000 * 60 * 60 * 24 * 15,
+    maxAge,
     httpOnly: true,
     sameSite: 'strict',
     secure: process.env.NODE_ENV !== 'development',

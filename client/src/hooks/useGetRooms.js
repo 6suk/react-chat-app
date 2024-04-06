@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useSocketContext } from '../context/SocketContext';
-import APIService from '../utils/APIService';
+import { useFetch } from '../context/FetchContext';
 
 const useGetRooms = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [rooms, setRooms] = useState([]);
   const { socket } = useSocketContext();
-  const as = new APIService();
+  const fs = useFetch();
 
   useEffect(() => {
     getRooms();
@@ -34,7 +34,7 @@ const useGetRooms = () => {
   const getRooms = useCallback(async () => {
     try {
       setIsLoading(true);
-      const responseJson = await as.get('/rooms');
+      const responseJson = await fs.get('/rooms');
       setRooms(responseJson.rooms);
     } catch (error) {
       toast.error(error.message);

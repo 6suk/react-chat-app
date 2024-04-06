@@ -1,10 +1,12 @@
 import uuid4 from 'uuid4';
+import jwt from 'jsonwebtoken';
 
 import {
   setGenerateToken,
   isUserNameUnique,
   updateUser,
   removeUser,
+  getUserById,
 } from '../service/user.service.js';
 
 /**
@@ -72,6 +74,27 @@ export const logout = async (req, res) => {
     });
   } catch (error) {
     console.log('🚨 logout Controller Error! : ', error);
+    res.status(500).json({
+      error: 'Server Error!',
+    });
+  }
+};
+
+export const refreshToken = async (req, res) => {
+  try {
+    const { id, name } = req.body.user;
+    const getUser = await getUserById(id);
+
+    // DB에 user 정보가 없을 경우
+    if (!getUser || getUser?.name !== name) {
+      return res.status(401).json({
+        error: '존재하지 않는 유저입니다.',
+      });
+    }
+    setGenerateToken({ id, name }, res);
+    res.status(200).json({ user: req.body.user, success: true });
+  } catch (error) {
+    console.log('🚨 refreshToken Controller Error! : ', error);
     res.status(500).json({
       error: 'Server Error!',
     });

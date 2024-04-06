@@ -1,25 +1,24 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
-import APIService from '../utils/APIService';
 import { useAuthContext } from '../context/AuthContext';
+import { useFetch } from '../context/FetchContext';
 
 const useLogout = () => {
   const [isLoading, setIsLoading] = useState();
   const { setAuthUser } = useAuthContext();
-  const as = new APIService();
+  const fs = useFetch();
 
   const logout = async () => {
     try {
-      const response = await as.post('/auth/logout');
-      console.log(response);
+      const response = await fs.post('/auth/logout');
 
       if (response.error) {
         throw new Error(response.error);
       }
 
-      // setAuthUser(null);
-      // localStorage.clear();
+      localStorage.clear();
+      setAuthUser(null);
     } catch (error) {
       console.log('🚨 useLogout Error', error.message);
       toast.error(error.message);
