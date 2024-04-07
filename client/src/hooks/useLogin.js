@@ -2,19 +2,19 @@ import { useState } from 'react';
 
 import toast from 'react-hot-toast';
 import { useAuthContext } from '../context/AuthContext';
-import APIService from '../utils/APIService';
+import { useFetch } from '../context/FetchContext';
 
 const useLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { setAuthUser } = useAuthContext();
-  const as = new APIService();
+  const fs = useFetch();
 
   const login = async (name, gender) => {
     try {
       setIsLoading(true);
       handleInputErrors(name, gender);
 
-      const response = await as.post('/auth/login', {
+      const response = await fs.post('/auth/login', {
         body: JSON.stringify({
           name,
           gender,

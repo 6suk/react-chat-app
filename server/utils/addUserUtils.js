@@ -4,7 +4,7 @@ import { getUserById } from '../service/user.service.js';
 export const formatAddUser = async (data, key, responseKey = null) => {
   if (data) {
     const getUser = await getUserById(data[key]);
-    return { ...data, [responseKey || key]: getUser };
+    return { ...data, [responseKey || key]: getUser || noneUser };
   }
   return {};
 };
@@ -23,3 +23,12 @@ export const formatAddUsers = async (arr, key, responseKey = null) => {
 
 // 기존 obj >>> array
 export const convertObjToArr = obj => Object.keys(obj).map(key => obj[key]);
+
+const noneUser = {
+  id: 'none',
+  name: '(알 수 없음)',
+  profile:
+    'https://avatar.iran.liara.run/username?username=?&background=dcdcdc&color=333333',
+  rooms: [],
+  createdRooms: [],
+};

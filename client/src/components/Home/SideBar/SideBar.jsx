@@ -1,46 +1,83 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import {
-  AiOutlineFolderAdd,
-  AiOutlineHome,
-  AiOutlineTeam,
-} from 'react-icons/ai';
-import Rooms from './Rooms';
-import CreateRoomModal from './CreateRoomModal';
+import useRoomStore from '../../../store/useRoomStore';
 
-const SideBar = () => {
-  const [menu, setMenu] = useState('rooms');
-  const [modalOpen, setModalOpen] = useState(false);
+import Menu from './Menu';
+import Rooms from './Rooms/Rooms';
+import Users from './Users/Users';
+import CreateRoomModal from './Modal/CreateRoomModal';
+import LogoutModal from './Modal/LogoutModal';
+
+const SideBar = ({ isRoomsLoading, rooms }) => {
+  const [menu, setMenu] = useState({
+    menu: 'rooms',
+    dp: 'rooms',
+  });
+  const [isModalOpen, setIsModalOpen] = useState({
+    chat: false,
+    logout: false,
+  });
+  const { currentRoom } = useRoomStore();
+
+  useEffect(() => {
+    if (currentRoom) {
+      setMenu({
+        menu: 'users',
+        dp: 'users',
+      });
+    } else {
+      setMenu({
+        menu: 'rooms',
+        dp: 'rooms',
+      });
+    }
+  }, [currentRoom]);
+
+  const sideBarComponent = () => {
+    switch (menu.dp) {
+      case 'rooms':
+        return <Rooms isRoomsLoading={isRoomsLoading} rooms={rooms} />;
+      case 'users':
+        return <Users />;
+      default:
+        return null;
+    }
+  };
+
+  const modalComponent = () => {
+    const props = {
+      menu,
+      setMenu,
+      isModalOpen,
+      setIsModalOpen,
+    };
+
+    switch (menu.menu) {
+      case 'chat':
+        return <CreateRoomModal {...props} />;
+      case 'logout':
+        return <LogoutModal {...props} />;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div className="flex h-1/3 w-full flex-col gap-2 p-4 px-5 md:h-full md:w-1/3">
-      {/* 메뉴 */}
-      <ul className="menu menu-horizontal menu-md flex-nowrap justify-between rounded-box bg-white bg-opacity-95 text-base">
-        <div className="flex">
-          <li onClick={() => setMenu('rooms')}>
-            <a>
-              <AiOutlineHome className="h-5 w-5 text-base-content" />
-            </a>
-          </li>
-          <li onClick={() => setMenu('users')}>
-            <a>
-              <AiOutlineTeam className="h-5 w-5 text-base-content" />
-            </a>
-          </li>
-        </div>
-        <div className="flex">
-          <li onClick={() => setModalOpen(true)}>
-            <a>
-              <AiOutlineFolderAdd className="h-5 w-5 text-base-content" />
-              <span className="hidden 2xl:inline-block">Add Chat</span>
-            </a>
-          </li>
-        </div>
-      </ul>
-      {menu === 'rooms' && <Rooms />}
-      {menu === 'users' && <div>users!</div>}
-      <CreateRoomModal modalOpen={modalOpen} setModalOpen={setModalOpen} />
-    </div>
+    <>
+      <div className="relative flex h-1/3 min-h-[33%] w-full flex-col md:h-full md:w-1/3">
+        {/* SELECT MENU */}
+        <Menu
+          menu={menu}
+          setMenu={setMenu}
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+        />
+        {/* SIDEBAR CONTENT */}
+        <div className="h-full overflow-auto px-5">{sideBarComponent()}</div>
+      </div>
+      {/* MODAL */}
+      {modalComponent()}
+    </>
   );
 };
 

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 
 import useRoomStore from '../store/useRoomStore';
-import APIService from '../utils/APIService';
 import toast from 'react-hot-toast';
+import { useFetch } from '../context/FetchContext';
 
 const useRoomMessages = () => {
-  const as = new APIService();
+  const fs = useFetch();
 
   const [isLoading, setIsLoading] = useState(false);
   const { currentRoom, setMessages } = useRoomStore();
@@ -14,7 +14,7 @@ const useRoomMessages = () => {
     const fetchRoomMessages = async () => {
       setIsLoading(true);
       try {
-        const response = await as.get(`/room/${currentRoom.id}`);
+        const response = await fs.get(`/room/${currentRoom.id}`);
         setMessages(response.messages);
       } catch (error) {
         toast.error(error.message);

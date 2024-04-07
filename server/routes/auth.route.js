@@ -1,11 +1,13 @@
 import express from 'express';
 
-import { login, logout } from '../controllers/auth.controller.js';
+import { login, logout, refreshToken } from '../controllers/auth.controller.js';
 import protectRoute from '../middleware/protect.route.js';
+import { removedRoom } from '../controllers/room.controller.js';
 
 const router = express.Router();
 
 router.post('/login', login);
-router.post('/logout', protectRoute, logout);
+router.post('/logout', protectRoute, logout, removedRoom);
+router.post('/token', refreshToken);
 
 export default router;

@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import APIService from '../utils/APIService';
 import useRoomStore from '../store/useRoomStore';
 import toast from 'react-hot-toast';
+import { useFetch } from '../context/FetchContext';
 
 const useSendMessage = () => {
-  const as = new APIService();
+  const fs = useFetch();
   const { currentRoom, setMessages, messages } = useRoomStore();
   const [isLoading, setIsLoading] = useState();
 
@@ -13,7 +13,7 @@ const useSendMessage = () => {
       handleInputErrors(message);
       setIsLoading(true);
 
-      const responseMessage = await as.post(`/room/${currentRoom.id}`, {
+      const responseMessage = await fs.post(`/room/${currentRoom.id}`, {
         body: JSON.stringify({
           content: message,
         }),

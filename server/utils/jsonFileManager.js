@@ -48,31 +48,6 @@ class JsonFileManager {
       throw error;
     }
   }
-
-  async appendData(newData) {
-    await this.updateFile(existingData => {
-      existingData.push(newData);
-      return existingData;
-    });
-  }
-
-  async removeDataById(id) {
-    await this.updateFile(existingData => {
-      return existingData.filter(data => data.id !== id);
-    });
-  }
-
-  async getDataById(id) {
-    const existingData = await this.readCachedData();
-    return existingData.find(data => data.id === id);
-  }
-
-  async isUnique(key, value) {
-    const existingData = await this.readCachedData();
-    // 데이터 O : 'false'
-    // 데이터 X : 'true'
-    return !existingData.some(data => data[key] === value);
-  }
 }
 
 export default JsonFileManager;

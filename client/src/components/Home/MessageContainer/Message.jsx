@@ -1,17 +1,15 @@
-import { useAuthContext } from '../../../context/AuthContext';
 import formatTimestamp from '../../../utils/formatTimestamp';
 
-const Message = ({ message }) => {
-  const { authUser } = useAuthContext();
+const Message = ({ message, authUser }) => {
   const isAdmin = message.from.id === 'admin';
-  const chatClassName =
-    message.from.id === authUser.id ? 'chat-end' : 'chat-start';
-  const bubbleClassName = message.from.id === authUser.id && 'bg-primary';
+  const isMine = message.from.id === authUser.id;
+  const chatClassName = isMine ? 'chat-end' : 'chat-start';
+  const bubbleClassName = isMine && 'bg-primary';
 
   return (
     <>
       {isAdmin ? (
-        <div>{message.content}</div>
+        <div className="my-1 py-1 text-center">📢 {message.content}</div>
       ) : (
         <div className={`chat ${chatClassName}`}>
           <div className="avatar chat-image">
@@ -22,9 +20,12 @@ const Message = ({ message }) => {
               />
             </div>
           </div>
-          <div className="chat-header text-sm text-gray-400">
-            {message.from.name}
-          </div>
+          {!isMine && (
+            <div className="chat-header text-sm text-gray-400">
+              {message.from.name}
+            </div>
+          )}
+
           <div className={`chat-bubble flex items-center ${bubbleClassName}`}>
             {message.content}
           </div>

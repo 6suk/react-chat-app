@@ -7,22 +7,26 @@ export const updateMessage = async message => {
   const roomId = message.room;
 
   await fm.updateFile(messages => {
-    const newMessage = {
-      [roomId]: [message],
-    };
-
     const messagesByRoomId = messages[roomId];
 
-    if (!messagesByRoomId) {
-      return { ...messages, ...newMessage };
-    }
+    const updateMessages = {
+      ...messages,
+      [roomId]: [...(messagesByRoomId || []), message],
+    };
 
-    messagesByRoomId.push(message);
-    return messages;
+    return updateMessages;
   });
 };
 
 export const getMessagesByRoomId = async roomId => {
-  const roomsMessages = await fm.readCachedData();
-  return roomsMessages[roomId];
+  const messages = await fm.readCachedData();
+  return messages[roomId];
+};
+
+export const removeMessageByRoomId = async roomId => {
+  await fm.updateFile(messages => {
+    const updateMessages = { ...messages };
+    delete updateMessages[roomId];
+    return updateMessages;
+  });
 };

@@ -8,6 +8,7 @@ import {
 import { io } from '../socket/socket.js';
 import { formatAddUser } from '../utils/addUserUtils.js';
 import { setAdminMessage } from '../utils/setAdminMessage.js';
+import { removeMessageByRoomId } from '../service/message.service.js';
 
 /**
  *  [
@@ -70,26 +71,48 @@ export const createdRoom = async (req, res, next) => {
 
 export const removedRoom = async (req, res) => {
   try {
-    const { id } = req.params;
+    const targetRoomIds = req.body.rooms;
+    const status = [];
 
-    // 방이 존재 하는지
-    const isRoomUniqe = await isRoomUnique(id);
+    for (const id of targetRoomIds) {
+      // 방이 존재 하는지
+      const isRoomUniqe = await isRoomUnique(id);
+      if (isRoomUniqe) {
+        status.push({
+          id,
+          ok: false,
+          status: 401,
+          message: '존재하지 않는 방입니다.',
+        });
+        continue;
+      }
 
-    if (isRoomUniqe)
-      return res.status(401).json({ error: '존재하지 않는 방입니다.' });
+      // created_user와 요청한 user가 같은지
+      const room = await getRoomById(id);
+      if (room.created_user_id !== req.user.id) {
+        status.push({
+          id,
+          ok: false,
+          status: 403,
+          message: '해당 방의 삭제 권한이 없습니다!',
+        });
+        continue;
+      }
 
-    // created_user와 요청한 user가 같은지
-    const room = await getRoomById(id);
+      // set json data
+      await removeRoom(id); // room 삭제
+      await removeMessageByRoomId(id); // 메세지 삭제
+      status.push({
+        id,
+        ok: true,
+        status: 200,
+        message: '방이 삭제 되었습니다!',
+      });
+    }
 
-    if (room.created_user_id !== req.user.id)
-      return res.status(403).json({ error: '해당 방의 삭제 권한이 없습니다!' });
-
-    // set json data
-    await removeRoom(room.id);
-    res.status(200).json({
-      room,
-      message: '방이 삭제 되었습니다!',
-    });
+    io.sockets.emit('removed room', targetRoomIds);
+    const response = { ...(req.message || {}), rooms: status };
+    res.status(200).json(response);
   } catch (error) {
     console.log('🚨 RemovedRoom Controller Error! : ', error);
     res.status(500).json({
@@ -108,10 +131,11 @@ export const joinRoom = async (req, res, next) => {
       return res.status(401).json({ error: '존재하지 않는 방입니다.' });
 
     const room = await getRoomById(id);
+
     if (!room.users.includes(req.user.id)) {
       // set json
-      room.users.push(req.user.id);
-      await updateRoom({ [id]: room });
+      const updateUser = { ...room, users: [...room.users, req.user.id] };
+      await updateRoom({ [id]: updateUser });
     }
 
     // room 정보 보내기

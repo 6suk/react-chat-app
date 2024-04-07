@@ -1,18 +1,18 @@
 import { useState } from 'react';
-import APIService from '../utils/APIService';
 import toast from 'react-hot-toast';
 import useRoomStore from '../store/useRoomStore';
+import { useFetch } from '../context/FetchContext';
 
 const useCreateRoom = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { setCurrentRoom } = useRoomStore();
-  const as = new APIService();
+  const fs = useFetch();
 
   const createRoom = async title => {
     try {
       setIsLoading(true);
       handleInputErrors(title);
-      const response = await as.post('/room', {
+      const response = await fs.post('/room', {
         body: JSON.stringify({ title }),
       });
 
