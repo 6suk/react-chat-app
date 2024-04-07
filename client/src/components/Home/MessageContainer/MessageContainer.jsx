@@ -37,13 +37,16 @@ const MessageContainer = () => {
             {!isLoading ? (
               messages.map(message => {
                 return (
-                  <div key={message.id} ref={lastMessageRef}>
-                    <Message
-                      key={message.id}
-                      message={message}
-                      authUser={authUser}
-                    />
-                  </div>
+                  // 입장한 이후의 메세지만 보이도록
+                  message.to.includes(authUser.id) && (
+                    <div key={message.id} ref={lastMessageRef}>
+                      <Message
+                        key={message.id}
+                        message={message}
+                        authUser={authUser}
+                      />
+                    </div>
+                  )
                 );
               })
             ) : (

@@ -4,7 +4,7 @@ import { updateMessage } from '../service/message.service.js';
 import { getUserById, updateUser } from '../service/user.service.js';
 import { io } from '../socket/socket.js';
 
-export const setAdminMessage = async (sendRoom, content) => {
+export const setAdminMessage = async (sendRoom, content, userId) => {
   // admin 계정이 없을 경우 생성
   const admin = await getUserById('admin');
   if (!admin) await updateUser(ADMIN);
@@ -13,7 +13,7 @@ export const setAdminMessage = async (sendRoom, content) => {
     id: uuid(),
     room: sendRoom.id,
     from: 'admin',
-    to: sendRoom.users,
+    to: [...sendRoom.users, userId],
     created_at: Date.now(),
     content,
   };

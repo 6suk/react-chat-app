@@ -51,7 +51,7 @@ io.on('connection', async socket => {
 
     if (!isJoined) {
       // send Admin Message
-      setAdminMessage(room, `${user.name}님이 입장하셨습니다!`);
+      setAdminMessage(room, `${user.name}님이 입장하셨습니다!`, user.id);
       console.log(
         `💡 new Join! : [${user.name}]님이 [${room.title}]방에 입장하셨습니다`
       );
