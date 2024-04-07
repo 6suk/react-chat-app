@@ -1,14 +1,37 @@
 import { useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
-import useCreateRoom from '../../../hooks/useCreateRoom';
+import useCreateRoom from '../../../../hooks/useCreateRoom';
 
-const CreateRoomModal = ({ modalOpen, setModalOpen }) => {
+const CreateRoomModal = ({ isModalOpen, setIsModalOpen, menu, setMenu }) => {
   const [title, setTitle] = useState('');
+
   const { isLoading, createRoom } = useCreateRoom();
+  const className = isModalOpen.chat ? 'modal-open' : '';
+
+  const onSubmit = e => {
+    e.preventDefault();
+    createRoom(title); // fetch
+    setIsModalOpen({ ...isModalOpen, chat: false });
+    setTitle('');
+  };
+
+  const handleCancelClick = () => {
+    setMenu({
+      menu: menu.dp,
+      dp: menu.dp,
+    });
+
+    setIsModalOpen({
+      ...isModalOpen,
+      chat: false,
+    });
+
+    setTitle('');
+  };
 
   return (
-    <dialog id="my_modal_1" className={`modal ${modalOpen && 'modal-open'}`}>
-      <div className="modal-box relative flex flex-col items-center gap-6 py-8 pt-10">
+    <dialog className={`modal ${className}`} onSubmit={onSubmit}>
+      <form className="modal-box relative flex flex-col items-center gap-6 py-8 pt-10">
         <h1 className="text-2xl font-bold">채팅방 생성</h1>
         <input
           type="text"
@@ -20,15 +43,7 @@ const CreateRoomModal = ({ modalOpen, setModalOpen }) => {
         />
         <div className="modal-action m-0 w-full justify-center">
           {!isLoading ? (
-            <button
-              className="btn btn-secondary flex flex-col"
-              type="button"
-              onClick={() => {
-                createRoom(title);
-                setModalOpen(false);
-                setTitle('');
-              }}
-            >
+            <button className="btn btn-secondary flex flex-col" type="submit">
               생성하기
             </button>
           ) : (
@@ -41,28 +56,20 @@ const CreateRoomModal = ({ modalOpen, setModalOpen }) => {
             </button>
           )}
 
-          <form method="dialog">
-            <button
-              className="btn"
-              onClick={() => {
-                setModalOpen(false);
-                setTitle('');
-              }}
-            >
+          {/* 취소 버튼 */}
+          <div method="dialog">
+            <button className="btn" onClick={handleCancelClick}>
               취소
             </button>
             <button
               className="absolute right-0 top-0 p-5"
-              onClick={() => {
-                setModalOpen(false);
-                setTitle('');
-              }}
+              onClick={handleCancelClick}
             >
               <AiOutlineClose className="h-6 w-6" />
             </button>
-          </form>
+          </div>
         </div>
-      </div>
+      </form>
     </dialog>
   );
 };

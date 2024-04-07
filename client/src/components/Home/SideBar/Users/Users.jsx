@@ -1,4 +1,4 @@
-import useRoomStore from '../../../store/useRoomStore';
+import useRoomStore from '../../../../store/useRoomStore';
 
 const Users = () => {
   const { currentRoom } = useRoomStore();
@@ -22,7 +22,7 @@ const Users = () => {
         {/* 채팅방 유저 collapse */}
         {currentRoom && (
           <div className="collapse collapse-arrow bg-opacity-0">
-            <input type="checkbox" className="peer" />
+            <input type="checkbox" className="peer" defaultChecked />
             <div className="collapse-title bg-opacity-0 text-white peer-checked:bg-opacity-0">
               채팅방 참여유저
             </div>
