@@ -1,18 +1,19 @@
 import { useEffect, useRef } from 'react';
 
 import { useAuthContext } from '../../../context/AuthContext';
-import useRealTimeMessages from '../../../hooks/useRealTimeMessages';
 import useRoomMessages from '../../../hooks/useRoomMessages';
 import useRoomStore from '../../../store/useRoomStore';
+
+import useRemoveRoom from '../../../hooks/useRemoveRoom';
 import ChatInput from './ChatInput';
 import ChatTopInfo from './ChatTopInfo';
 import Message from './Message';
 
 const MessageContainer = () => {
-  const { currentRoom, messages } = useRoomStore();
+  const { isLoading: isRemoveLoading, removeRoom } = useRemoveRoom();
+  const { currentRoom, messages, setCurrentRoom } = useRoomStore();
+  const { authUser } = useAuthContext();
   const { isLoading } = useRoomMessages();
-  useRealTimeMessages();
-
   const lastMessageRef = useRef();
 
   useEffect(() => {
@@ -25,13 +26,23 @@ const MessageContainer = () => {
     <>
       {currentRoom ? (
         <div className="flex h-full w-full flex-col gap-6 overflow-auto bg-white px-8 py-6 opacity-90">
-          <ChatTopInfo currentRoom={currentRoom} />
-          <div className="flex h-full flex-col gap-1 overflow-auto">
+          <ChatTopInfo
+            currentRoom={currentRoom}
+            setCurrentRoom={setCurrentRoom}
+            authUser={authUser}
+            isLoading={isRemoveLoading}
+            removeRoom={removeRoom}
+          />
+          <div className="flex h-full flex-col gap-2 overflow-auto">
             {!isLoading ? (
               messages.map(message => {
                 return (
                   <div key={message.id} ref={lastMessageRef}>
-                    <Message key={message.id} message={message} />
+                    <Message
+                      key={message.id}
+                      message={message}
+                      authUser={authUser}
+                    />
                   </div>
                 );
               })
