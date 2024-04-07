@@ -19,6 +19,7 @@ const useLogout = () => {
 
       localStorage.clear();
       setAuthUser(null);
+      location.reload();
     } catch (error) {
       console.log('🚨 useLogout Error', error.message);
       toast.error(error.message);

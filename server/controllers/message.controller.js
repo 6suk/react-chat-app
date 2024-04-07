@@ -5,6 +5,7 @@ import {
   updateMessage,
 } from '../service/message.service.js';
 import { formatAddUser, formatAddUsers } from '../utils/addUserUtils.js';
+import { getRoomById } from '../service/room.service.js';
 
 /**
  *  room_id {
@@ -24,12 +25,14 @@ import { formatAddUser, formatAddUsers } from '../utils/addUserUtils.js';
 
 export const sendMessage = async (req, res) => {
   try {
-    const room = req.room;
+    // const room = req.room;
+    const { id } = req.params;
+    const room = await getRoomById(id);
     const newMessage = {
       id: uuid4(),
-      room: room.id,
+      room: id,
       from: req.user.id,
-      to: req.room.users,
+      to: room.users,
       created_at: Date.now(),
       content: req.body.content,
     };

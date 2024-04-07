@@ -31,7 +31,7 @@ const useGetRooms = () => {
     // });
 
     return () => socket?.off('new room');
-  }, [socket]);
+  }, [socket, rooms]);
 
   useEffect(() => {
     socket?.on('removed room', removedRoomid => {
@@ -40,17 +40,19 @@ const useGetRooms = () => {
         return;
       }
 
-      const removedRoom = rooms.filter(room => room.id !== removedRoomid);
+      const removedRoom = rooms.filter(
+        room => !removedRoomid.includes(room.id)
+      );
       setRooms(removedRoom);
 
-      if (currentRoom?.id === removedRoomid) {
+      if (removedRoomid.includes(currentRoom?.id)) {
         setCurrentRoom(null);
         toast.error('참여 중인 방이 삭제 되었습니다!');
       }
     });
 
     return () => socket?.off('removed room');
-  }, [socket, currentRoom?.id]);
+  }, [socket, currentRoom?.id, rooms]);
 
   const getRooms = useCallback(async () => {
     try {

@@ -8,6 +8,7 @@ import {
 import { io } from '../socket/socket.js';
 import { formatAddUser } from '../utils/addUserUtils.js';
 import { setAdminMessage } from '../utils/setAdminMessage.js';
+import { removeMessageByRoomId } from '../service/message.service.js';
 
 /**
  *  [
@@ -99,8 +100,8 @@ export const removedRoom = async (req, res) => {
       }
 
       // set json data
-      await removeRoom(id);
-      io.sockets.emit('removed room', id);
+      await removeRoom(id); // room 삭제
+      await removeMessageByRoomId(id); // 메세지 삭제
       status.push({
         id,
         ok: true,
@@ -109,6 +110,7 @@ export const removedRoom = async (req, res) => {
       });
     }
 
+    io.sockets.emit('removed room', targetRoomIds);
     const response = { ...(req.message || {}), rooms: status };
     res.status(200).json(response);
   } catch (error) {
@@ -129,10 +131,11 @@ export const joinRoom = async (req, res, next) => {
       return res.status(401).json({ error: '존재하지 않는 방입니다.' });
 
     const room = await getRoomById(id);
+
     if (!room.users.includes(req.user.id)) {
       // set json
-      room.users.push(req.user.id);
-      await updateRoom({ [id]: room });
+      const updateUser = { ...room, users: [...room.users, req.user.id] };
+      await updateRoom({ [id]: updateUser });
     }
 
     // room 정보 보내기

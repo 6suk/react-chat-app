@@ -4,13 +4,29 @@ import JsonFileManager from '../utils/jsonFileManager.js';
 const fileName = 'user.json';
 const fm = new JsonFileManager(fileName);
 
-export const getUserById = id => fm.getDataById(id);
+export const getUserById = async id => {
+  const users = await fm.readCachedData();
+  return users.find(user => user.id === id);
+};
 
-export const updateUser = newData => fm.appendData(newData);
+export const updateUser = async newData => {
+  await fm.updateFile(users => {
+    return [...users, newData];
+  });
+};
 
-export const removeUser = id => fm.removeDataById(id);
+export const removeUser = async id => {
+  await fm.updateFile(users => {
+    return users.filter(user => user.id !== id);
+  });
+};
 
-export const isUserNameUnique = (key, value) => fm.isUnique(key, value);
+export const isUserNameUnique = async (key, value) => {
+  const users = await fm.readCachedData();
+  // 데이터 O : 'false'
+  // 데이터 X : 'true'
+  return !users.some(user => user[key] === value);
+};
 
 export const filterUserById = async id => {
   const users = await fm.readCachedData();
@@ -70,16 +86,4 @@ export const setGenerateToken = ({ id, name }, res) => {
     sameSite: 'strict',
     secure: process.env.NODE_ENV !== 'development',
   });
-};
-
-export const setAdmin = async () => {
-  const admin = {
-    id: 'admin',
-    name: '관리자',
-    gender: 'male',
-    profile: 'https://avatar.iran.liara.run/public/boy?username=admin',
-    rooms: [],
-  };
-
-  await fm.appendData(admin);
 };

@@ -11,8 +11,9 @@ export const updateRoom = async newData => {
 
 export const removeRoom = async id => {
   await fm.updateFile(existingData => {
-    if (existingData[id]) delete existingData[id];
-    return existingData;
+    const updateRooms = { ...existingData };
+    delete updateRooms[id];
+    return updateRooms;
   });
 };
 
@@ -28,12 +29,11 @@ export const getRoomById = async id => {
 
 export const getAllRooms = async () => await fm.readCachedData();
 
-export const getUserRooms = async user_id => {
+export const getUserRooms = async userId => {
   const rooms = await fm.readCachedData();
-  const rooms_arr = Object.values(rooms);
+  const roomsValue = Object.values(rooms);
 
-  return rooms_arr.filter(data => {
-    const userSet = new Set(data.users);
-    return userSet.has(user_id);
+  return roomsValue.filter(data => {
+    return data.users.includes(userId);
   });
 };
