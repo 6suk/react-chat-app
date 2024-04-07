@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useAuthContext } from '../../../context/AuthContext';
-import useGetRooms from '../../../hooks/useGetRooms';
 import useRoomStore from '../../../store/useRoomStore';
 import getRandomEmojis from '../../../utils/getRandomEmojis';
 import Room from './Room';
 
-const Rooms = () => {
-  const { isLoading, rooms } = useGetRooms();
+const Rooms = ({ isRoomsLoading, rooms }) => {
   const { currentRoom, setCurrentRoom, updateRooms, removeUpdateRooms } =
     useRoomStore();
   const [emojisByRoom, setEmojisByRoom] = useState({});
@@ -22,7 +20,7 @@ const Rooms = () => {
 
   return (
     <>
-      {isLoading ? (
+      {isRoomsLoading ? (
         <p className="loading loading-dots loading-lg mx-auto flex h-full items-center justify-center text-primary opacity-80"></p>
       ) : (
         <ul className="flex flex-col py-2">

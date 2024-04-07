@@ -1,7 +1,4 @@
 class fetchService {
-  isRefreshing = false;
-  refreshTokenPromise = null;
-
   constructor({ url, initOptions, on401Error }) {
     this.url = url;
     this.initOptions = initOptions;

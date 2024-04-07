@@ -11,7 +11,7 @@ export const updateRoom = async newData => {
 
 export const removeRoom = async id => {
   await fm.updateFile(existingData => {
-    delete existingData[id];
+    if (existingData[id]) delete existingData[id];
     return existingData;
   });
 };

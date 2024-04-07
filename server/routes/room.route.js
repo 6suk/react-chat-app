@@ -15,7 +15,7 @@ const router = express.Router();
 
 // Room
 router.post('/', protectRoute, createdRoom, userCreateRoom);
-router.delete('/:id', protectRoute, removedRoom);
+router.delete('/', protectRoute, removedRoom);
 
 // Message
 router.post('/:id', protectRoute, joinRoom, userJoinRoom, sendMessage);
