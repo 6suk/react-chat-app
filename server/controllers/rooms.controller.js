@@ -1,4 +1,5 @@
 import { getAllRooms, getUserRooms } from '../service/room.service.js';
+
 import { convertObjToArr, formatAddUsers } from '../utils/addUserUtils.js';
 
 /**
@@ -43,9 +44,6 @@ export const getRoomsByUser = async (req, res) => {
   try {
     const rooms = await getUserRooms(req.user.id);
     res.status(200).json({ rooms });
-  } catch (error) {}
-
-  try {
   } catch (error) {
     console.log('🚨 GetRoomsByUser Controller Error! : ', error);
     res.status(500).json({

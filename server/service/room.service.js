@@ -4,9 +4,7 @@ const fileName = 'room.json';
 const fm = new JsonFileManager(fileName);
 
 export const updateRoom = async newData => {
-  await fm.updateFile(existingData => {
-    return { ...existingData, ...newData };
-  });
+  await fm.updateFile(existingData => ({ ...existingData, ...newData }));
 };
 
 export const removeRoom = async id => {
@@ -27,13 +25,11 @@ export const getRoomById = async id => {
   return rooms[id];
 };
 
-export const getAllRooms = async () => await fm.readCachedData();
+export const getAllRooms = async () => fm.readCachedData();
 
 export const getUserRooms = async userId => {
   const rooms = await fm.readCachedData();
   const roomsValue = Object.values(rooms);
 
-  return roomsValue.filter(data => {
-    return data.users.includes(userId);
-  });
+  return roomsValue.filter(data => data.users.includes(userId));
 };

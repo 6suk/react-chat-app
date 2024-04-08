@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+
 import JsonFileManager from '../utils/jsonFileManager.js';
 
 const fileName = 'user.json';
@@ -10,15 +11,11 @@ export const getUserById = async id => {
 };
 
 export const updateUser = async newData => {
-  await fm.updateFile(users => {
-    return [...users, newData];
-  });
+  await fm.updateFile(users => [...users, newData]);
 };
 
 export const removeUser = async id => {
-  await fm.updateFile(users => {
-    return users.filter(user => user.id !== id);
-  });
+  await fm.updateFile(users => users.filter(user => user.id !== id));
 };
 
 export const isUserNameUnique = async (key, value) => {
@@ -35,7 +32,7 @@ export const filterUserById = async id => {
 
 // Join 시 User Data Rooms 추가
 export const setUserRooms = async (id, roomId) => {
-  const updateUser = user => {
+  const updateUserRooms = user => {
     if (user.id === id)
       return {
         ...user,
@@ -45,15 +42,13 @@ export const setUserRooms = async (id, roomId) => {
   };
 
   await fm.updateFile(users => {
-    const updateUsers = users.map(user => {
-      return updateUser(user);
-    });
+    const updateUsers = users.map(user => updateUserRooms(user));
     return updateUsers;
   });
 };
 
 export const setCreatedRoom = async (id, roomId) => {
-  const updateUser = user => {
+  const updateUserCreatedRoom = user => {
     if (user.id === id) {
       return {
         ...user,
@@ -64,24 +59,21 @@ export const setCreatedRoom = async (id, roomId) => {
   };
 
   await fm.updateFile(users => {
-    const updateUsers = users.map(user => {
-      return updateUser(user);
-    });
+    const updateUsers = users.map(user => updateUserCreatedRoom(user));
     return updateUsers;
   });
 };
 
 // 토근 생성 및 쿠키 세팅
 export const setGenerateToken = ({ id, name }, res) => {
-  const maxAge_15d = 1000 * 60 * 60 * 24 * 15; // 15일
-  const maxAge = 1000 * 10; // 10초
+  const maxAge = 1000 * 60 * 60 * 24 * 15; // 15일
 
   const token = jwt.sign({ id, name }, process.env.JWT_SECRET, {
-    expiresIn: maxAge_15d,
+    expiresIn: maxAge,
   });
 
   res.cookie('jwt', token, {
-    maxAge: maxAge_15d,
+    maxAge,
     httpOnly: true,
     sameSite: 'strict',
     secure: process.env.NODE_ENV !== 'development',

@@ -1,15 +1,17 @@
 import express from 'express';
+
 import { getMessages, sendMessage } from '../controllers/message.controller.js';
 import {
   createdRoom,
   joinRoom,
   removedRoom,
 } from '../controllers/room.controller.js';
-import protectRoute from '../middleware/protect.route.js';
 import {
   userCreateRoom,
   userJoinRoom,
 } from '../controllers/user.controller.js';
+
+import protectRoute from '../middleware/protect.route.js';
 
 const router = express.Router();
 

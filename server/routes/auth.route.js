@@ -1,8 +1,9 @@
 import express from 'express';
 
 import { login, logout, refreshToken } from '../controllers/auth.controller.js';
-import protectRoute from '../middleware/protect.route.js';
 import { removedRoom } from '../controllers/room.controller.js';
+
+import protectRoute from '../middleware/protect.route.js';
 
 const router = express.Router();
 

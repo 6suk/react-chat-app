@@ -1,11 +1,14 @@
 import uuid4 from 'uuid4';
+
 import { io } from '../socket/socket.js';
+
 import {
   getMessagesByRoomId,
   updateMessage,
 } from '../service/message.service.js';
-import { formatAddUser, formatAddUsers } from '../utils/addUserUtils.js';
 import { getRoomById } from '../service/room.service.js';
+
+import { formatAddUser, formatAddUsers } from '../utils/addUserUtils.js';
 
 /**
  *  room_id {

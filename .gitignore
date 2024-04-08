@@ -1,4 +1,5 @@
 # add
+.vscode/
 box/*
 .env
 # dev
