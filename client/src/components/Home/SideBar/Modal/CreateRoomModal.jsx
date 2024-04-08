@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
-import useCreateRoom from '../../../../hooks/useCreateRoom';
+
+import useCreateRoom from '@hooks/useCreateRoom';
 
 const CreateRoomModal = ({ isModalOpen, setIsModalOpen, menu, setMenu }) => {
   const [title, setTitle] = useState('');

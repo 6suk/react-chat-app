@@ -1,5 +1,6 @@
 import { AiOutlineClose } from 'react-icons/ai';
-import useLogout from '../../../../hooks/useLogout';
+
+import useLogout from '@hooks/useLogout';
 
 const LogoutModal = ({ isModalOpen, setIsModalOpen, menu, setMenu }) => {
   const { isLoading, logout } = useLogout();

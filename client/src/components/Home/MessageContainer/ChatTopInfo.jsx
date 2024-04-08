@@ -1,5 +1,5 @@
-import { AiOutlineClose, AiOutlineDelete, AiOutlineHome } from 'react-icons/ai';
 import { useState } from 'react';
+import { AiOutlineClose, AiOutlineDelete, AiOutlineHome } from 'react-icons/ai';
 
 const ChatTopInfo = ({
   currentRoom,

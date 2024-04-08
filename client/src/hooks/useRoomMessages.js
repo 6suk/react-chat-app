@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 
-import useRoomStore from '../store/useRoomStore';
-import toast from 'react-hot-toast';
-import { useFetch } from '../context/FetchContext';
+import { useFetch } from '@context/FetchContext';
+import useRoomStore from '@store/useRoomStore';
 
 const useRoomMessages = () => {
   const fs = useFetch();

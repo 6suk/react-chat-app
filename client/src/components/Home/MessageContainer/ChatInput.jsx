@@ -1,6 +1,7 @@
-import { IoIosSend } from 'react-icons/io';
-import useSendMessage from '../../../hooks/useSendMessage';
 import { useState } from 'react';
+import { IoIosSend } from 'react-icons/io';
+
+import useSendMessage from '@hooks/useSendMessage';
 
 const ChatInput = ({ disabled = false }) => {
   const { isLoading, sendMessage } = useSendMessage();

@@ -1,7 +1,8 @@
-import MessageContainer from '../components/Home/MessageContainer/MessageContainer';
-import SideBar from '../components/Home/SideBar/SideBar';
-import useGetRooms from '../hooks/useGetRooms';
-import useRealTimeMessages from '../hooks/useRealTimeMessages';
+import useGetRooms from '@hooks/useGetRooms';
+import useRealTimeMessages from '@hooks/useRealTimeMessages';
+
+import MessageContainer from '@components/Home/MessageContainer/MessageContainer';
+import SideBar from '@components/Home/SideBar/SideBar';
 
 const Home = () => {
   useRealTimeMessages();

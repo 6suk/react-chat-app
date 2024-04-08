@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import useLogin from '../hooks/useLogin';
+
+import useLogin from '@hooks/useLogin';
 
 const Auth = () => {
   const [userName, setName] = useState('');
@@ -34,9 +35,9 @@ const Auth = () => {
             />
           </div>
           <div className="flex w-full items-center justify-center gap-2">
-            <div className="join join-vertical sm:join-horizontal w-full">
+            <div className="join join-vertical w-full sm:join-horizontal">
               <input
-                className="join-item btn w-full sm:w-1/2"
+                className="btn join-item w-full sm:w-1/2"
                 type="radio"
                 name="gender"
                 aria-label="남성"
@@ -45,7 +46,7 @@ const Auth = () => {
                 checked={gender === 'male' ? true : false}
               />
               <input
-                className="join-item btn w-full sm:w-1/2"
+                className="btn join-item w-full sm:w-1/2"
                 type="radio"
                 name="gender"
                 aria-label="여성"

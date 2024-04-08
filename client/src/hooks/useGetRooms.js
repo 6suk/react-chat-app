@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useFetch } from '../context/FetchContext';
-import { useSocketContext } from '../context/SocketContext';
-import useRoomStore from '../store/useRoomStore';
+
+import { useFetch } from '@context/FetchContext';
+import { useSocketContext } from '@context/SocketContext';
+import useRoomStore from '@store/useRoomStore';
 
 const useGetRooms = () => {
   const [isLoading, setIsLoading] = useState(false);

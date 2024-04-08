@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { useFetch } from '../context/FetchContext';
+
+import { useFetch } from '@context/FetchContext';
 
 const useRemoveRoom = () => {
   const [isLoading, setIsLoading] = useState(false);

@@ -1,13 +1,13 @@
 import { useEffect, useRef } from 'react';
 
-import { useAuthContext } from '../../../context/AuthContext';
-import useRoomMessages from '../../../hooks/useRoomMessages';
-import useRoomStore from '../../../store/useRoomStore';
+import { useAuthContext } from '@context/AuthContext';
+import useRemoveRoom from '@hooks/useRemoveRoom';
+import useRoomMessages from '@hooks/useRoomMessages';
+import useRoomStore from '@store/useRoomStore';
 
-import useRemoveRoom from '../../../hooks/useRemoveRoom';
-import ChatInput from './ChatInput';
-import ChatTopInfo from './ChatTopInfo';
-import Message from './Message';
+import ChatInput from '@components/Home/MessageContainer/ChatInput';
+import ChatTopInfo from '@components/Home/MessageContainer/ChatTopInfo';
+import Message from '@components/Home/MessageContainer/Message';
 
 const MessageContainer = () => {
   const { isLoading: isRemoveLoading, removeRoom } = useRemoveRoom();
