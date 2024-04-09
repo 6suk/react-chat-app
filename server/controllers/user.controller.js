@@ -21,8 +21,8 @@ export const otherUsersList = async (req, res) => {
 export const getUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const getUser = await getUserById(id);
-    res.status(200).json(getUser);
+    const user = await getUserById(id);
+    res.status(200).json(user);
   } catch (error) {
     console.log('🚨 getUser Controller Error! : ', error);
     res.status(500).json({

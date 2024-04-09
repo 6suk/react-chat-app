@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useAuthContext } from '../../../../context/AuthContext';
-import useRoomStore from '../../../../store/useRoomStore';
-import getRandomEmojis from '../../../../utils/getRandomEmojis';
-import Room from './Room';
+
+import { useAuthContext } from '@context/AuthContext';
+import useRoomStore from '@store/useRoomStore';
+
+import Room from '@components/Home/SideBar/Rooms/Room';
+
+import getRandomEmojis from '@utils/getRandomEmojis';
 
 const Rooms = ({ isRoomsLoading, rooms }) => {
   const { currentRoom, setCurrentRoom, updateRooms, removeUpdateRooms } =

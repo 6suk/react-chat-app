@@ -4,15 +4,93 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
+    'plugin:import/recommended',
     'plugin:react/jsx-runtime',
     'plugin:react-hooks/recommended',
     'prettier',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  plugins: ['react-refresh', 'import', 'unused-imports'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', 'node_modules/'],
   parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
-  settings: { react: { version: '18.2' } },
-  plugins: ['react-refresh', 'unused-imports'],
+  settings: {
+    'import/resolver': {
+      alias: {
+        map: [
+          ['@', './src'],
+          ['@components', './src/components'],
+          ['@hooks', './src/hooks'],
+          ['@pages', './src/pages'],
+          ['@store', './src/store'],
+          ['@utils', './src/utils'],
+          ['@context', './src/context'],
+        ],
+        extensions: ['.js', '.jsx'],
+      },
+    },
+    react: { version: '18.2' },
+  },
   rules: {
+    'import/order': [
+      'error',
+      {
+        groups: [
+          'type',
+          'builtin',
+          'external',
+          'internal',
+          'parent',
+          'sibling',
+          'index',
+          'unknown',
+        ],
+        pathGroups: [
+          {
+            pattern: 'react*',
+            group: 'builtin',
+            position: 'before',
+          },
+          {
+            pattern: '@/**',
+            group: 'internal',
+            position: 'before',
+          },
+          {
+            pattern: '@store/**',
+            group: 'internal',
+          },
+          {
+            pattern: '@context/**',
+            group: 'internal',
+          },
+          {
+            pattern: '@hooks/**',
+            group: 'internal',
+          },
+          {
+            pattern: '@pages/**',
+            group: 'internal',
+            position: 'after',
+          },
+          {
+            pattern: '@components/**',
+            group: 'internal',
+            position: 'after',
+          },
+          {
+            pattern: '@utils/**',
+            group: 'internal',
+            position: 'after',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['builtin', 'external'],
+        // distinctGroup: false,
+        'newlines-between': 'always',
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true,
+        },
+      },
+    ],
     'react/prop-types': 'off',
     'react/self-closing-comp': [
       'error',

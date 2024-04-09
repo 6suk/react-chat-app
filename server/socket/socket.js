@@ -1,9 +1,13 @@
-import dotenv from 'dotenv';
 import express from 'express';
+
 import { createServer } from 'http';
+
+import dotenv from 'dotenv';
 import { Server } from 'socket.io';
+
 import { getRoomById } from '../service/room.service.js';
 import { getUserById } from '../service/user.service.js';
+
 import { setAdminMessage } from '../utils/setAdminMessage.js';
 
 dotenv.config();
@@ -17,22 +21,18 @@ const io = new Server(server, {
   },
 });
 
-const getUser = async id => {
-  return await getUserById(id);
-};
+const getUser = async id => getUserById(id);
 
-const getRoom = async id => {
-  return await getRoomById(id);
-};
+const getRoom = async id => getRoomById(id);
 
 io.on('connection', async socket => {
   console.log('🚀 user connected! : ', socket.id);
 
-  const userId = socket.handshake.query.userId;
+  const { userId } = socket.handshake.query;
 
   socket.on('refresh', async () => {
     const user = await getUser(userId);
-    const joinedRooms = user.rooms || [];
+    const joinedRooms = user?.rooms || [];
 
     if (joinedRooms.length > 0) {
       socket.join(joinedRooms);
@@ -51,7 +51,13 @@ io.on('connection', async socket => {
 
     if (!isJoined) {
       // send Admin Message
-      setAdminMessage(room, `${user.name}님이 입장하셨습니다!`, user.id);
+      setAdminMessage({
+        io,
+        room,
+        content: `${user.name}님이 입장하셨습니다!`,
+        userId: user.id,
+      });
+
       console.log(
         `💡 new Join! : [${user.name}]님이 [${room.title}]방에 입장하셨습니다`
       );

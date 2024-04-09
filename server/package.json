@@ -1,5 +1,6 @@
 {
   "name": "server",
+  "private": true,
   "version": "0.0.1",
   "type": "module",
   "main": "server.js",
@@ -16,10 +17,16 @@
     "uuid4": "^2.0.3"
   },
   "devDependencies": {
-    "nodemon": "^3.1.0"
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "nodemon": "^3.1.0",
+    "prettier": "^3.2.5"
   },
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   }
 }

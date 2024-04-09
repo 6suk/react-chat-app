@@ -1,12 +1,14 @@
 import express from 'express';
-import cors from 'cors';
+
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
+
+import { app, server } from './socket/socket.js';
 
 import authRoute from './routes/auth.route.js';
 import roomRoute from './routes/room.route.js';
 import roomsRoute from './routes/rooms.route.js';
 import userRoute from './routes/user.route.js';
-import { app, server } from './socket/socket.js';
 
 app.use(express.json());
 app.use(cookieParser());

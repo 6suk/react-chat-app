@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 
-import useRoomStore from '../../../store/useRoomStore';
+import useRoomStore from '@store/useRoomStore';
 
-import Menu from './Menu';
-import Rooms from './Rooms/Rooms';
-import Users from './Users/Users';
-import CreateRoomModal from './Modal/CreateRoomModal';
-import LogoutModal from './Modal/LogoutModal';
+import Menu from '@components/Home/SideBar/Menu';
+import CreateRoomModal from '@components/Home/SideBar/Modal/CreateRoomModal';
+import LogoutModal from '@components/Home/SideBar/Modal/LogoutModal';
+import Rooms from '@components/Home/SideBar/Rooms/Rooms';
+import Users from '@components/Home/SideBar/Users/Users';
 
 const SideBar = ({ isRoomsLoading, rooms }) => {
   const [menu, setMenu] = useState({

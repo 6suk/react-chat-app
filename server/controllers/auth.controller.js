@@ -25,15 +25,15 @@ export const login = async (req, res) => {
   try {
     const { name, gender } = req.body;
     if (!name || !gender) {
-      return res
-        .status(400)
-        .json({ error: '닉네임 및 성별은 필수 항목입니다!' });
+      res.status(400).json({ error: '닉네임 및 성별은 필수 항목입니다!' });
+      return;
     }
 
     const isUnique = await isUserNameUnique('name', name);
 
     if (!isUnique) {
-      return res.status(400).json({ error: '중복된 닉네임입니다!' });
+      res.status(400).json({ error: '중복된 닉네임입니다!' });
+      return;
     }
 
     const id = uuid4();
@@ -100,9 +100,10 @@ export const refreshToken = async (req, res) => {
 
     // DB에 user 정보가 없을 경우
     if (!getUser || getUser?.name !== name) {
-      return res.status(401).json({
+      res.status(401).json({
         error: '존재하지 않는 유저입니다.',
       });
+      return;
     }
     setGenerateToken({ id, name }, res);
     res.status(200).json({ user: req.body.user });

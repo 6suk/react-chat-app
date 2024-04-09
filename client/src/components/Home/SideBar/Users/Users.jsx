@@ -1,4 +1,4 @@
-import useRoomStore from '../../../../store/useRoomStore';
+import useRoomStore from '@store/useRoomStore';
 
 const Users = () => {
   const { currentRoom } = useRoomStore();

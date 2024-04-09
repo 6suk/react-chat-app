@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
-import { useSocketContext } from '../context/SocketContext';
-import useRoomStore from '../store/useRoomStore';
+
+import { useSocketContext } from '@context/SocketContext';
+import useRoomStore from '@store/useRoomStore';
 
 const useRealTimeMessages = () => {
   const { socket } = useSocketContext();

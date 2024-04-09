@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import useRoomStore from '../store/useRoomStore';
-import { useFetch } from '../context/FetchContext';
+
+import { useFetch } from '@context/FetchContext';
+import useRoomStore from '@store/useRoomStore';
 
 const useCreateRoom = () => {
   const [isLoading, setIsLoading] = useState(false);

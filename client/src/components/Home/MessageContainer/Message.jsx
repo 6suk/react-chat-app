@@ -1,4 +1,4 @@
-import formatTimestamp from '../../../utils/formatTimestamp';
+import formatTimestamp from '@utils/formatTimestamp';
 
 const Message = ({ message, authUser }) => {
   const isAdmin = message.from.id === 'admin';

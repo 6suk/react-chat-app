@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
-import fetchService from '../utils/fetchService';
-import { useAuthContext } from './AuthContext';
+import { useAuthContext } from '@context/AuthContext';
+
+import fetchService from '@utils/fetchService';
 
 export const FetchContext = createContext();
 

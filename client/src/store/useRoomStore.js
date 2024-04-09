@@ -1,23 +1,31 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
+const initialStata = {
+  messages: [],
+  updateRooms: [],
+  currentRoom: null,
+};
+
 const useRoomStore = create(
   devtools(set => ({
-    messages: [],
+    messages: initialStata.messages,
     setMessages: messages => set({ messages }),
 
-    currentRoom: null,
-    // Room Object
+    currentRoom: initialStata.currentRoom,
     setCurrentRoom: currentRoom => set({ currentRoom }),
 
-    updateRooms: [],
+    updateRooms: initialStata.updateRooms,
     setUpdateRooms: updateRooms => set({ updateRooms }),
+
     addUpdateRooms: id =>
       set(state => ({ updateRooms: [...state.updateRooms, id] })),
     removeUpdateRooms: id =>
       set(state => ({
         updateRooms: otherRooms(state.updateRooms, id),
       })),
+
+    resetToInitial: () => set({ ...initialStata }),
   }))
 );
 

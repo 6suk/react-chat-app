@@ -1,11 +1,10 @@
+import { Toaster } from 'react-hot-toast';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { Toaster } from 'react-hot-toast';
+import { useAuthContext } from '@context/AuthContext';
 
-import Auth from './pages/Auth';
-import Home from './pages/Home';
-
-import { useAuthContext } from './context/AuthContext';
+import Auth from '@pages/Auth';
+import Home from '@pages/Home';
 
 export default function App() {
   const { authUser } = useAuthContext();
