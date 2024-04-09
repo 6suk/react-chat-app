@@ -1,83 +1,101 @@
+import { useAuthContext } from '@context/AuthContext';
+import { useSocketContext } from '@context/SocketContext';
+import useGetUsers from '@hooks/useGetUsers';
 import useRoomStore from '@store/useRoomStore';
 
+import Loading from '@components/Home/SideBar/Loading';
+import User from '@components/Home/SideBar/Users/User';
+
 const Users = () => {
+  const { onlineUser } = useSocketContext();
   const { currentRoom } = useRoomStore();
+  const { authUser } = useAuthContext();
+  const { isLoading, users } = useGetUsers();
+  const className = currentRoom ? 'collapse-content' : '';
 
   return (
     <>
-      <div className="overflow-auto pt-2">
-        {/* 전체 유저 collapse */}
-        {currentRoom ? (
+      {!isLoading ? (
+        <div className="overflow-auto pt-2">
+          {/* 전체 유저 collapse */}
           <div className="collapse collapse-arrow bg-opacity-0">
-            <input type="checkbox" className="peer" />
-            <div className="collapse-title bg-opacity-0 text-white peer-checked:bg-opacity-0">
-              전체 유저
-            </div>
-            <User isCollapse={true} />
-          </div>
-        ) : (
-          <User />
-        )}
+            {currentRoom && (
+              <>
+                <input type="checkbox" className="peer" />
+                <div className="collapse-title bg-opacity-0 text-white peer-checked:bg-opacity-0">
+                  전체 유저
+                </div>
+              </>
+            )}
 
-        {/* 채팅방 유저 collapse */}
-        {currentRoom && (
-          <div className="collapse collapse-arrow bg-opacity-0">
-            <input type="checkbox" className="peer" defaultChecked />
-            <div className="collapse-title bg-opacity-0 text-white peer-checked:bg-opacity-0">
-              채팅방 참여유저
+            <div
+              className={`${className} bg-opacity-0 p-0 text-white peer-checked:bg-opacity-0`}
+            >
+              <ul className="flex flex-col">
+                <User
+                  key={authUser.id}
+                  user={authUser}
+                  isAuthUser={true}
+                  isOnline={true}
+                />
+                {users.map(user => {
+                  const isOnline = user && onlineUser.includes(user.id);
+                  return (
+                    isOnline && (
+                      <User
+                        key={user.id}
+                        user={user}
+                        authUser={authUser}
+                        isOnline={isOnline}
+                      />
+                    )
+                  );
+                })}
+                {users.map(user => {
+                  const isOnline = user && onlineUser.includes(user.id);
+                  return (
+                    !isOnline && (
+                      <User
+                        key={user.id}
+                        user={user}
+                        authUser={authUser}
+                        isOnline={isOnline}
+                      />
+                    )
+                  );
+                })}
+              </ul>
             </div>
-            <User isCollapse={true} />
           </div>
-        )}
-      </div>
+
+          {/* 채팅방 유저 collapse */}
+          {currentRoom && (
+            <div className="collapse collapse-arrow bg-opacity-0">
+              <input type="checkbox" className="peer" defaultChecked />
+              <div className="collapse-title bg-opacity-0 text-white peer-checked:bg-opacity-0">
+                채팅방 참여유저
+              </div>
+              <User user={authUser} isAuthUser={true} isOnline={true} />
+              {currentRoom.users.map(userId => {
+                const user = users.find(user => user.id === userId);
+                return (
+                  user && (
+                    <User
+                      key={user.id}
+                      user={user}
+                      authUser={authUser}
+                      isOnline={onlineUser.includes(user.id)}
+                    />
+                  )
+                );
+              })}
+            </div>
+          )}
+        </div>
+      ) : (
+        <Loading />
+      )}
     </>
-  );
-};
-
-const User = ({ isCollapse = false }) => {
-  return (
-    <div
-      className={`${isCollapse && 'collapse-content'} bg-opacity-0 p-0 text-white peer-checked:bg-opacity-0`}
-    >
-      {/* 유저 리스트 */}
-      <ul className="flex flex-col">
-        <li className="flex items-center justify-start gap-4 rounded px-5 py-4 text-secondary-content">
-          <div className="avatar online">
-            <div className="w-8 rounded-full">
-              <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-            </div>
-          </div>
-          <p>유저 이름</p>
-        </li>
-        <div className="w-full border-b border-white opacity-30" />
-        <li className="flex items-center justify-start gap-4 rounded px-5 py-4 text-secondary-content">
-          <div className="avatar online">
-            <div className="w-8 rounded-full">
-              <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-            </div>
-          </div>
-          <p>유저 이름</p>
-        </li>
-        <div className="w-full border-b border-white opacity-30" />
-        <li className="flex items-center justify-start gap-4 rounded px-5 py-4 text-secondary-content">
-          <div className="avatar online">
-            <div className="w-8 rounded-full">
-              <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-            </div>
-          </div>
-          <p>유저 이름</p>
-        </li>
-        <div className="w-full border-b border-white opacity-30" />
-        <li className="flex items-center justify-start gap-4 rounded px-5 py-4 text-secondary-content">
-          <div className="avatar online">
-            <div className="w-8 rounded-full">
-              <img src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-            </div>
-          </div>
-          <p>유저 이름</p>
-        </li>
-      </ul>
-    </div>
   );
 };
 

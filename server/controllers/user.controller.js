@@ -5,13 +5,13 @@ import {
   setUserRooms,
 } from '../service/user.service.js';
 
-export const otherUsersList = async (req, res) => {
+export const getOtherUsers = async (req, res) => {
   try {
-    const currentUser = req.user;
-    const otherUsers = await filterUserById(currentUser.id);
-    res.status(200).json(otherUsers);
+    const { id } = req.user;
+    const users = await filterUserById(id);
+    res.status(200).json({ users });
   } catch (error) {
-    console.log('🚨 OtherUsersList Controller Error! : ', error);
+    console.log('🚨 getOtherUsers Controller Error! : ', error);
     res.status(500).json({
       error: 'Server Error!',
     });

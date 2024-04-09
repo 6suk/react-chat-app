@@ -27,7 +27,7 @@ export const isUserNameUnique = async (key, value) => {
 
 export const filterUserById = async id => {
   const users = await fm.readCachedData();
-  return users.filter(data => data.id !== id);
+  return users.filter(data => data.id !== id && data.id !== 'admin');
 };
 
 // Join 시 User Data Rooms 추가

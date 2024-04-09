@@ -14,7 +14,8 @@ export const useSocketContext = () => {
 export const SocketContextProvider = ({ children }) => {
   const { authUser } = useAuthContext();
   const [socket, setSocket] = useState(null);
-  const { currentRoom } = useRoomStore();
+  const [onlineUser, setOnlineUser] = useState([]);
+  const { currentRoom, setCurrentRoom } = useRoomStore();
 
   useEffect(() => {
     if (authUser) {
@@ -23,9 +24,14 @@ export const SocketContextProvider = ({ children }) => {
           userId: authUser.id,
         },
       });
+
       socket.emit('refresh');
       setSocket(socket);
-      if (currentRoom);
+
+      socket.on('onlineUser', onlineUsers => {
+        console.log(onlineUsers);
+        setOnlineUser(onlineUsers);
+      });
     } else {
       socket?.close;
       setSocket(null);
@@ -38,14 +44,20 @@ export const SocketContextProvider = ({ children }) => {
   }, [authUser]);
 
   useEffect(() => {
-    console.log(currentRoom?.id);
     if (currentRoom?.id) {
       socket?.emit('join', currentRoom.id);
+
+      if (!currentRoom.users.includes(authUser.id)) {
+        setCurrentRoom({
+          ...currentRoom,
+          users: [...currentRoom.users, authUser.id],
+        });
+      }
     }
   }, [currentRoom?.id, socket]);
 
   return (
-    <SocketContext.Provider value={{ socket, setSocket }}>
+    <SocketContext.Provider value={{ socket, onlineUser }}>
       {children}
     </SocketContext.Provider>
   );
