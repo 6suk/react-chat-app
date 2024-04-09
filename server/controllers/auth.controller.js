@@ -1,5 +1,7 @@
 import uuid4 from 'uuid4';
 
+import { io } from '../socket/socket.js';
+
 import {
   getUserById,
   isUserNameUnique,
@@ -48,17 +50,15 @@ export const login = async (req, res) => {
       createdRooms: [],
     };
 
+    const reponseUser = { id, name, gender, profile: newUser.profile };
+
     // set jwt token
     setGenerateToken({ id: newUser.id, name: newUser.name }, res);
     // set json data
-    updateUser(newUser);
+    await updateUser(newUser);
 
-    res.status(200).json({
-      id: newUser.id,
-      name: newUser.name,
-      gender: newUser.gender,
-      profile: newUser.profile,
-    });
+    io.sockets.emit('new user', reponseUser);
+    res.status(200).json(reponseUser);
   } catch (error) {
     console.log('🚨 Auth Controller Error! : ', error);
     res.status(500).json({
@@ -84,6 +84,8 @@ export const logout = async (req, res, next) => {
         message: '로그아웃이 완료 되었습니다!',
       },
     };
+
+    io.sockets.emit('removed user', req.user.id);
     next();
   } catch (error) {
     console.log('🚨 logout Controller Error! : ', error);

@@ -56,7 +56,7 @@ export const createdRoom = async (req, res, next) => {
     // set json data
     await updateRoom({ [id]: room });
 
-    setAdminMessage({
+    await setAdminMessage({
       io,
       room,
       content: `${user.name}님이 [${room.title}] 방을 생성하셨습니다!`,
@@ -76,7 +76,7 @@ export const removedRoom = async (req, res) => {
   try {
     const targetRoomIds = req.body.rooms;
 
-    const statusPromise = targetRoomIds.map(async id => {
+    const getStatus = async id => {
       const isRoomUniqe = await isRoomUnique(id);
       if (isRoomUniqe) {
         return {
@@ -107,9 +107,9 @@ export const removedRoom = async (req, res) => {
         status: 200,
         message: '방이 삭제 되었습니다!',
       };
-    });
+    };
 
-    const status = await Promise.all(statusPromise);
+    const status = await Promise.all(targetRoomIds.map(id => getStatus(id)));
     io.sockets.emit('removed room', targetRoomIds);
     const response = { ...(req.message || {}), rooms: status };
     res.status(200).json(response);
@@ -124,6 +124,7 @@ export const removedRoom = async (req, res) => {
 export const joinRoom = async (req, res, next) => {
   try {
     const { id } = req.params;
+    const { user } = req;
 
     // 방이 존재 하는지
     const isRoomUniqe = await isRoomUnique(id);
@@ -133,11 +134,30 @@ export const joinRoom = async (req, res, next) => {
     }
 
     const room = await getRoomById(id);
+    const isJoined = room.users.includes(req.user.id);
 
-    if (!room.users.includes(req.user.id)) {
+    // 첫 입장
+    if (!isJoined) {
+      const users = [...room.users, req.user.id];
+
       // set json
-      const updateUser = { ...room, users: [...room.users, req.user.id] };
-      await updateRoom({ [id]: updateUser });
+      const updateRoomToUsers = {
+        ...room,
+        users,
+      };
+      await updateRoom({ [id]: updateRoomToUsers });
+
+      // socket
+      io.emit('new join', { id, joinedUsers: users });
+      await setAdminMessage({
+        io,
+        room: updateRoomToUsers,
+        content: `${user.name}님이 입장하셨습니다!`,
+      });
+
+      console.log(
+        `💡 new Join! : [${user.name}]님이 [${room.title}]방에 입장하셨습니다`
+      );
     }
 
     // room 정보 보내기

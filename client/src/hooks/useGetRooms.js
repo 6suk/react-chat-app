@@ -8,7 +8,9 @@ import useRoomStore from '@store/useRoomStore';
 const useGetRooms = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [rooms, setRooms] = useState([]);
+
   const { socket } = useSocketContext();
+
   const fs = useFetch();
   const { currentRoom, setCurrentRoom } = useRoomStore();
 
@@ -24,12 +26,6 @@ const useGetRooms = () => {
       }
       setRooms([...rooms, room]);
     });
-
-    // (임시) room 입장 시 rooms 반환 => 참여 유저가 실시간으로 연동 되어야함
-    // socket?.on('new join', ({ room_id, user_name }) => {
-    //   console.log(room_id);
-    //   console.log(user_name);
-    // });
 
     return () => socket?.off('new room');
   }, [socket, rooms]);
@@ -52,7 +48,28 @@ const useGetRooms = () => {
       }
     });
 
-    return () => socket?.off('removed room');
+    socket?.on('new join', ({ id, joinedUsers }) => {
+      console.log(id);
+      console.log(joinedUsers);
+      const roomIndex = rooms.findIndex(room => room.id === id);
+
+      if (roomIndex !== -1) {
+        let getRooms = [...rooms];
+        const updateRoom = { ...getRooms[roomIndex], users: joinedUsers };
+        getRooms[roomIndex] = updateRoom;
+
+        setRooms(getRooms);
+
+        if (currentRoom.id === id) {
+          setCurrentRoom(updateRoom);
+        }
+      }
+    });
+
+    return () => {
+      socket?.off('removed room');
+      socket?.off('new join');
+    };
   }, [socket, currentRoom?.id, rooms]);
 
   const getRooms = useCallback(async () => {

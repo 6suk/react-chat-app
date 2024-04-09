@@ -11,7 +11,7 @@ export const ADMIN = {
   rooms: [],
 };
 
-export const setAdminMessage = async ({ io, room, content, userId = null }) => {
+export const setAdminMessage = async ({ io, room, content }) => {
   // admin 계정이 없을 경우 생성
   const admin = await getUserById('admin');
   if (!admin) await updateUser(ADMIN);
@@ -20,7 +20,7 @@ export const setAdminMessage = async ({ io, room, content, userId = null }) => {
     id: uuid(),
     room: room.id,
     from: 'admin',
-    to: userId ? [...room.users, userId] : room.users,
+    to: room.users,
     created_at: Date.now(),
     content,
   };

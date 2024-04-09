@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAuthContext } from '@context/AuthContext';
 import useRoomStore from '@store/useRoomStore';
 
+import Loading from '@components/Home/SideBar/Loading';
 import Room from '@components/Home/SideBar/Rooms/Room';
 
 import getRandomEmojis from '@utils/getRandomEmojis';
@@ -24,7 +25,7 @@ const Rooms = ({ isRoomsLoading, rooms }) => {
   return (
     <>
       {isRoomsLoading ? (
-        <p className="loading loading-dots loading-lg mx-auto flex h-full items-center justify-center text-primary opacity-80"></p>
+        <Loading />
       ) : (
         <ul className="flex flex-col py-2">
           {rooms.map((room, index) => {
