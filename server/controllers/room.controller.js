@@ -1,14 +1,17 @@
 import uuid from 'uuid4';
+
+import { io } from '../socket/socket.js';
+
+import { removeMessageByRoomId } from '../service/message.service.js';
 import {
   getRoomById,
   isRoomUnique,
   removeRoom,
   updateRoom,
 } from '../service/room.service.js';
-import { io } from '../socket/socket.js';
+
 import { formatAddUser } from '../utils/addUserUtils.js';
 import { setAdminMessage } from '../utils/setAdminMessage.js';
-import { removeMessageByRoomId } from '../service/message.service.js';
 
 /**
  *  [
@@ -28,7 +31,7 @@ export const createdRoom = async (req, res, next) => {
   try {
     const { title } = req.body;
 
-    const user = req.user;
+    const { user } = req;
     const timestamp = Date.now();
     const id = uuid();
 
@@ -53,11 +56,11 @@ export const createdRoom = async (req, res, next) => {
     // set json data
     await updateRoom({ [id]: room });
 
-    // socket - send admin message
-    setAdminMessage(
+    setAdminMessage({
+      io,
       room,
-      `${user.name}님이 [${room.title}] 방을 생성하셨습니다!`
-    );
+      content: `${user.name}님이 [${room.title}] 방을 생성하셨습니다!`,
+    });
     io.sockets.emit('new room', responseRoom);
 
     next();
@@ -72,44 +75,41 @@ export const createdRoom = async (req, res, next) => {
 export const removedRoom = async (req, res) => {
   try {
     const targetRoomIds = req.body.rooms;
-    const status = [];
 
-    for (const id of targetRoomIds) {
-      // 방이 존재 하는지
+    const statusPromise = targetRoomIds.map(async id => {
       const isRoomUniqe = await isRoomUnique(id);
       if (isRoomUniqe) {
-        status.push({
+        return {
           id,
           ok: false,
           status: 401,
           message: '존재하지 않는 방입니다.',
-        });
-        continue;
+        };
       }
 
       // created_user와 요청한 user가 같은지
       const room = await getRoomById(id);
       if (room.created_user_id !== req.user.id) {
-        status.push({
+        return {
           id,
           ok: false,
           status: 403,
           message: '해당 방의 삭제 권한이 없습니다!',
-        });
-        continue;
+        };
       }
 
       // set json data
       await removeRoom(id); // room 삭제
       await removeMessageByRoomId(id); // 메세지 삭제
-      status.push({
+      return {
         id,
         ok: true,
         status: 200,
         message: '방이 삭제 되었습니다!',
-      });
-    }
+      };
+    });
 
+    const status = await Promise.all(statusPromise);
     io.sockets.emit('removed room', targetRoomIds);
     const response = { ...(req.message || {}), rooms: status };
     res.status(200).json(response);
@@ -127,8 +127,10 @@ export const joinRoom = async (req, res, next) => {
 
     // 방이 존재 하는지
     const isRoomUniqe = await isRoomUnique(id);
-    if (isRoomUniqe)
-      return res.status(401).json({ error: '존재하지 않는 방입니다.' });
+    if (isRoomUniqe) {
+      res.status(401).json({ error: '존재하지 않는 방입니다.' });
+      return;
+    }
 
     const room = await getRoomById(id);
 
