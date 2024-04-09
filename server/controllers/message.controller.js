@@ -6,7 +6,6 @@ import {
   getMessagesByRoomId,
   updateMessage,
 } from '../service/message.service.js';
-import { getRoomById } from '../service/room.service.js';
 
 import { formatAddUser, formatAddUsers } from '../utils/addUserUtils.js';
 
@@ -28,14 +27,12 @@ import { formatAddUser, formatAddUsers } from '../utils/addUserUtils.js';
 
 export const sendMessage = async (req, res) => {
   try {
-    // const room = req.room;
-    const { id } = req.params;
-    const room = await getRoomById(id);
+    const { id, users } = req.room;
     const newMessage = {
       id: uuid4(),
       room: id,
       from: req.user.id,
-      to: room.users,
+      to: users,
       created_at: Date.now(),
       content: req.body.content,
     };
@@ -45,7 +42,7 @@ export const sendMessage = async (req, res) => {
 
     // response formatting!
     const responseMessage = await formatAddUser(newMessage, 'from');
-    io.to(room.id).emit('message', responseMessage);
+    io.to(id).emit('message', responseMessage);
     res.status(200).json({
       message: responseMessage,
     });

@@ -19,6 +19,7 @@ const useLogout = () => {
         throw new Error(response.error);
       }
 
+      toast.success(response.logout.message);
       resetToInitial(); // 스토어 초기화
       localStorage.clear();
       setAuthUser(null);

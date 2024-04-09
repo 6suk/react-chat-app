@@ -27,6 +27,3 @@ export const formatAddUsers = async (arr, key, responseKey = null) => {
   }
   return [];
 };
-
-// 기존 obj >>> array
-export const convertObjToArr = obj => Object.keys(obj).map(key => obj[key]);

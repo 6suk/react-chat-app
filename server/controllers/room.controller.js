@@ -4,34 +4,20 @@ import { io } from '../socket/socket.js';
 
 import { removeMessageByRoomId } from '../service/message.service.js';
 import {
-  getRoomById,
-  isRoomUnique,
+  getRoomRemovalStatus,
   removeRoom,
   updateRoom,
 } from '../service/room.service.js';
+import { setCreatedRoom, setUserRooms } from '../service/user.service.js';
 
 import { formatAddUser } from '../utils/addUserUtils.js';
 import { setAdminMessage } from '../utils/setAdminMessage.js';
 
-/**
- *  [
- *    {
- *      id : UUID, (uni)
- *      title : string
- *      created_user_id : user_id
- *      created_at : timestamp
- *      updated_at : timestamp
- *      users : user_id array
- *      messages : message_id array
- *    }
- *  ]
- */
-
-export const createdRoom = async (req, res, next) => {
+export const createRoom = async (req, res) => {
   try {
     const { title } = req.body;
-
     const { user } = req;
+
     const timestamp = Date.now();
     const id = uuid();
 
@@ -45,25 +31,26 @@ export const createdRoom = async (req, res, next) => {
       messages: [],
     };
 
+    // set json data
+    await updateRoom({ [id]: room });
+    await setUserRooms(user.id, id); // 참여 중인 방
+    await setCreatedRoom(user.id, id); // 생성한 방
+
     // reponse formatting!
     const responseRoom = await formatAddUser(
       room,
       'created_user_id',
       'createdUser'
     );
-    req.room = responseRoom;
 
-    // set json data
-    await updateRoom({ [id]: room });
-
+    // socket
+    io.sockets.emit('new room', responseRoom);
     await setAdminMessage({
       io,
       room,
       content: `${user.name}님이 [${room.title}] 방을 생성하셨습니다!`,
     });
-    io.sockets.emit('new room', responseRoom);
-
-    next();
+    res.status(200).json(responseRoom);
   } catch (error) {
     console.log('🚨 CreatedRoom Controller Error! : ', error);
     res.status(500).json({
@@ -72,99 +59,30 @@ export const createdRoom = async (req, res, next) => {
   }
 };
 
-export const removedRoom = async (req, res) => {
+export const removeRooms = async (req, res) => {
   try {
-    const targetRoomIds = req.body.rooms;
+    const roomIds = req.body.rooms; // roomIds to remove
+    const userId = req.user.id;
 
-    const getStatus = async id => {
-      const isRoomUniqe = await isRoomUnique(id);
-      if (isRoomUniqe) {
-        return {
-          id,
-          ok: false,
-          status: 401,
-          message: '존재하지 않는 방입니다.',
-        };
+    // romove Room & Messages
+    const statusArray = await roomIds.reduce(async (prevPromise, id) => {
+      await prevPromise;
+      const status = await getRoomRemovalStatus(id, userId);
+
+      if (status.ok) {
+        await removeRoom(id); // room 삭제
+        await removeMessageByRoomId(id); // 삭제되는 방의 메세지 전부 삭제
       }
 
-      // created_user와 요청한 user가 같은지
-      const room = await getRoomById(id);
-      if (room.created_user_id !== req.user.id) {
-        return {
-          id,
-          ok: false,
-          status: 403,
-          message: '해당 방의 삭제 권한이 없습니다!',
-        };
-      }
+      return [...(await prevPromise), status];
+    }, []);
 
-      // set json data
-      await removeRoom(id); // room 삭제
-      await removeMessageByRoomId(id); // 메세지 삭제
-      return {
-        id,
-        ok: true,
-        status: 200,
-        message: '방이 삭제 되었습니다!',
-      };
-    };
-
-    const status = await Promise.all(targetRoomIds.map(id => getStatus(id)));
-    io.sockets.emit('removed room', targetRoomIds);
-    const response = { ...(req.message || {}), rooms: status };
+    // socket
+    io.sockets.emit('removed room', roomIds);
+    const response = { ...(req.message || {}), rooms: statusArray };
     res.status(200).json(response);
   } catch (error) {
     console.log('🚨 RemovedRoom Controller Error! : ', error);
-    res.status(500).json({
-      error: 'Server Error!',
-    });
-  }
-};
-
-export const joinRoom = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const { user } = req;
-
-    // 방이 존재 하는지
-    const isRoomUniqe = await isRoomUnique(id);
-    if (isRoomUniqe) {
-      res.status(401).json({ error: '존재하지 않는 방입니다.' });
-      return;
-    }
-
-    const room = await getRoomById(id);
-    const isJoined = room.users.includes(req.user.id);
-
-    // 첫 입장
-    if (!isJoined) {
-      const users = [...room.users, req.user.id];
-
-      // set json
-      const updateRoomToUsers = {
-        ...room,
-        users,
-      };
-      await updateRoom({ [id]: updateRoomToUsers });
-
-      // socket
-      io.emit('new join', { id, joinedUsers: users });
-      await setAdminMessage({
-        io,
-        room: updateRoomToUsers,
-        content: `${user.name}님이 입장하셨습니다!`,
-      });
-
-      console.log(
-        `💡 new Join! : [${user.name}]님이 [${room.title}]방에 입장하셨습니다`
-      );
-    }
-
-    // room 정보 보내기
-    req.room = room;
-    next();
-  } catch (error) {
-    console.log('🚨 Join Room Controller Error! : ', error);
     res.status(500).json({
       error: 'Server Error!',
     });

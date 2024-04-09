@@ -14,7 +14,7 @@ const useRoomMessages = () => {
     const fetchRoomMessages = async () => {
       setIsLoading(true);
       try {
-        const response = await fs.get(`/room/${currentRoom.id}`);
+        const response = await fs.get(`/messages/${currentRoom.id}`);
         setMessages(response.messages);
       } catch (error) {
         toast.error(error.message);

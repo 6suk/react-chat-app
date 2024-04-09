@@ -18,7 +18,7 @@ export const removeUser = async id => {
   await fm.updateFile(users => users.filter(user => user.id !== id));
 };
 
-export const isUserNameUnique = async (key, value) => {
+export const isUserUniqueByKey = async (key, value) => {
   const users = await fm.readCachedData();
   // 데이터 O : 'false'
   // 데이터 X : 'true'

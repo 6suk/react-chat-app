@@ -14,11 +14,14 @@ const useSendMessage = () => {
       handleInputErrors(message);
       setIsLoading(true);
 
-      const responseMessage = await fs.post(`/room/${currentRoom.id}`, {
-        body: JSON.stringify({
-          content: message,
-        }),
-      });
+      const responseMessage = await fs.post(
+        `/messages/send/${currentRoom.id}`,
+        {
+          body: JSON.stringify({
+            content: message,
+          }),
+        }
+      );
 
       if (responseMessage) {
         setMessages([...messages, responseMessage.message]);
