@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 
-import { useAuthContext } from '@context/AuthContext';
 import { useFetch } from '@context/FetchContext';
+import { getActions } from '@store/index';
 
 const useLogin = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const { setAuthUser } = useAuthContext();
   const fs = useFetch();
+  const [isLoading, setIsLoading] = useState(false);
+  const { setAuthUser } = getActions();
 
   const login = async (name, gender) => {
     try {
@@ -26,7 +26,6 @@ const useLogin = () => {
       }
 
       setAuthUser(response);
-      localStorage.setItem('user', JSON.stringify(response));
     } catch (error) {
       console.log('🚨 useLogin Error', error.message);
       toast.error(error.message);

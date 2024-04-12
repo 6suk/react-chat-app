@@ -1,4 +1,4 @@
-import { io } from '../socket/socket.js';
+import { io, socketJoin } from '../socket/socket.js';
 
 import {
   getRoomById,
@@ -37,6 +37,7 @@ const joinRoute = async (req, res, next) => {
       await setUserRooms(user.id, id);
 
       // socket
+      socketJoin({ userId: user.id, roomId: id });
       io.emit('new join', { id, joinedUsers: users });
       await setAdminMessage({
         io,

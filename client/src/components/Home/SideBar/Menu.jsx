@@ -11,44 +11,37 @@ const Menu = ({ menu, setMenu, isModalOpen, setIsModalOpen }) => {
       <div className="flex max-sm:flex-wrap">
         <li
           onClick={() => {
-            setMenu({
-              menu: 'rooms',
-              dp: 'rooms',
-            });
+            if (menu !== 'rooms') setMenu('rooms');
           }}
         >
           <a>
             <AiOutlineMenu
-              className={`h-6 w-6 text-white  ${menu.menu === 'rooms' ? 'opacity-100' : 'opacity-50'}`}
+              className={`h-6 w-6 text-white  ${menu === 'rooms' ? 'opacity-100' : 'opacity-50'}`}
             />
           </a>
         </li>
         <li
           onClick={() => {
-            setMenu({
-              menu: 'users',
-              dp: 'users',
-            });
+            if (menu !== 'users') setMenu('users');
           }}
         >
           <a>
             <AiOutlineTeam
-              className={`h-6 w-6 text-white  ${menu.menu === 'users' ? 'opacity-100' : 'opacity-50'}`}
+              className={`h-6 w-6 text-white  ${menu === 'users' ? 'opacity-100' : 'opacity-50'}`}
             />
           </a>
         </li>
         <li
           onClick={() => {
-            setIsModalOpen({ ...isModalOpen, chat: true });
-            setMenu({
-              menu: 'chat',
-              dp: 'rooms',
-            });
+            if (menu !== 'chat') {
+              setIsModalOpen({ ...isModalOpen, chat: true });
+              setMenu('chat');
+            }
           }}
         >
           <a>
             <AiOutlineFolderAdd
-              className={`h-6 w-6 text-white  ${menu.menu === 'chat' ? 'opacity-100' : 'opacity-50'}`}
+              className={`h-6 w-6 text-white  ${menu === 'chat' ? 'opacity-100' : 'opacity-50'}`}
             />
             <span className="hidden opacity-60 2xl:inline-block">Add Chat</span>
           </a>
@@ -57,16 +50,15 @@ const Menu = ({ menu, setMenu, isModalOpen, setIsModalOpen }) => {
       <div className="flex">
         <li
           onClick={() => {
-            setMenu({
-              ...menu,
-              menu: 'logout',
-            });
-            setIsModalOpen({ ...isModalOpen, logout: true });
+            if (menu !== 'logout') {
+              setMenu('logout');
+              setIsModalOpen({ ...isModalOpen, logout: true });
+            }
           }}
         >
           <a>
             <AiOutlineLogout
-              className={`h-6 w-6 text-white  ${menu.menu === 'logout' ? 'opacity-100' : 'opacity-50'}`}
+              className={`h-6 w-6 text-white  ${menu === 'logout' ? 'opacity-100' : 'opacity-50'}`}
             />
           </a>
         </li>

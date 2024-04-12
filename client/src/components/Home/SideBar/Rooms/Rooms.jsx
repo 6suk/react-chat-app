@@ -1,26 +1,12 @@
-import { useEffect, useState } from 'react';
-
-import { useAuthContext } from '@context/AuthContext';
-import useRoomStore from '@store/useRoomStore';
+import { useAuthUser, useIsRoomsLoading, useRooms } from '@store/index';
 
 import Loading from '@components/Home/SideBar/Loading';
 import Room from '@components/Home/SideBar/Rooms/Room';
 
-import getRandomEmojis from '@utils/getRandomEmojis';
-
-const Rooms = ({ isRoomsLoading, rooms }) => {
-  const { currentRoom, setCurrentRoom, updateRooms, removeUpdateRooms } =
-    useRoomStore();
-  const [emojisByRoom, setEmojisByRoom] = useState({});
-  const { authUser } = useAuthContext();
-
-  useEffect(() => {
-    const emojisMap = {};
-    rooms.forEach(room => {
-      emojisMap[room.id] = getRandomEmojis();
-    });
-    setEmojisByRoom(emojisMap);
-  }, [rooms]);
+const Rooms = () => {
+  const authUser = useAuthUser();
+  const rooms = useRooms();
+  const isRoomsLoading = useIsRoomsLoading();
 
   return (
     <>
@@ -29,18 +15,12 @@ const Rooms = ({ isRoomsLoading, rooms }) => {
       ) : (
         <ul className="flex flex-col py-2">
           {rooms.map((room, index) => {
+            const { id } = room;
+            const isLast = index === room.length - 1;
+            const isJoined = room.users.includes(authUser.id);
+
             return (
-              <Room
-                key={room.id}
-                room={room}
-                emoji={emojisByRoom[room.id]}
-                setCurrentRoom={setCurrentRoom}
-                removeUpdateRooms={removeUpdateRooms}
-                isLast={index === rooms.length - 1}
-                isCurrent={currentRoom?.id === room.id}
-                isUpdate={updateRooms.includes(room.id)}
-                isJoined={room.users.includes(authUser.id)}
-              />
+              <Room key={id} room={room} isLast={isLast} isJoined={isJoined} />
             );
           })}
         </ul>

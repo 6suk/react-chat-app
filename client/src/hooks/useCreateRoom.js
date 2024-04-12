@@ -2,26 +2,25 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 import { useFetch } from '@context/FetchContext';
-import useRoomStore from '@store/useRoomStore';
+import { getActions } from '@store/index';
 
 const useCreateRoom = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const { setCurrentRoom } = useRoomStore();
   const fs = useFetch();
+  const [isLoading, setIsLoading] = useState(false);
+  const { setCurrentRoom } = getActions();
 
   const createRoom = async title => {
     try {
       setIsLoading(true);
       handleInputErrors(title);
-      const response = await fs.post('/room', {
+      const room = await fs.post('/room', {
         body: JSON.stringify({ title }),
       });
 
-      if (response.error) {
-        throw new Error(response.error);
+      if (room.error) {
+        throw new Error(room.error);
       }
-
-      setCurrentRoom(response);
+      setCurrentRoom(room);
     } catch (error) {
       console.log('🚨 useLogin Error', error.message);
       toast.error(error.message);

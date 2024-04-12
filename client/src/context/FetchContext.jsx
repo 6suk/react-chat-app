@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
-import { useAuthContext } from '@context/AuthContext';
+import { getActions, getAuthUser } from '@store/index';
 
 import fetchService from '@utils/fetchService';
 
@@ -10,7 +10,8 @@ export const FetchContext = createContext();
 export const useFetch = () => useContext(FetchContext);
 
 export const FetchContextProvider = ({ children }) => {
-  const { authUser, setAuthUser } = useAuthContext();
+  const authUser = getAuthUser();
+  const { setAuthUser } = getActions();
   const [fetchInstance, setFetchInstance] = useState(null);
 
   // App 실행 시 fetchService 1번만 불러오기 (로그인 전, 로그인 후)

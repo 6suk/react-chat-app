@@ -1,21 +1,25 @@
-import { useAuthContext } from '@context/AuthContext';
-import { useSocketContext } from '@context/SocketContext';
-import useGetUsers from '@hooks/useGetUsers';
-import useRoomStore from '@store/useRoomStore';
+import { memo } from 'react';
+
+import {
+  getAuthUser,
+  useCurrentRoom,
+  useIsUsersLoading,
+  useUsers,
+} from '@store/index';
 
 import Loading from '@components/Home/SideBar/Loading';
 import User from '@components/Home/SideBar/Users/User';
 
-const Users = () => {
-  const { onlineUser } = useSocketContext();
-  const { currentRoom } = useRoomStore();
-  const { authUser } = useAuthContext();
-  const { isLoading, users } = useGetUsers();
+const Users = memo(function Users() {
+  const currentRoom = useCurrentRoom();
+  const authUser = getAuthUser();
+  const isUsersLoading = useIsUsersLoading();
+  const users = useUsers();
   const className = currentRoom ? 'collapse-content' : '';
 
   return (
     <>
-      {!isLoading ? (
+      {!isUsersLoading ? (
         <div className="overflow-auto pt-2">
           {/* 전체 유저 collapse */}
           <div className="collapse collapse-arrow bg-opacity-0">
@@ -32,37 +36,10 @@ const Users = () => {
               className={`${className} bg-opacity-0 p-0 text-white peer-checked:bg-opacity-0`}
             >
               <ul className="flex flex-col">
-                <User
-                  key={authUser.id}
-                  user={authUser}
-                  isAuthUser={true}
-                  isOnline={true}
-                />
+                <User key={authUser.id} user={authUser} isAuthUser />
                 {users.map(user => {
-                  const isOnline = user && onlineUser.includes(user.id);
-                  return (
-                    isOnline && (
-                      <User
-                        key={user.id}
-                        user={user}
-                        authUser={authUser}
-                        isOnline={isOnline}
-                      />
-                    )
-                  );
-                })}
-                {users.map(user => {
-                  const isOnline = user && onlineUser.includes(user.id);
-                  return (
-                    !isOnline && (
-                      <User
-                        key={user.id}
-                        user={user}
-                        authUser={authUser}
-                        isOnline={isOnline}
-                      />
-                    )
-                  );
+                  const { id } = user;
+                  return <User key={id} user={user} />;
                 })}
               </ul>
             </div>
@@ -75,20 +52,16 @@ const Users = () => {
               <div className="collapse-title bg-opacity-0 text-white peer-checked:bg-opacity-0">
                 채팅방 참여유저
               </div>
-              <User user={authUser} isAuthUser={true} isOnline={true} />
-              {currentRoom.users.map(userId => {
-                const user = users.find(user => user.id === userId);
-                return (
-                  user && (
-                    <User
-                      key={user.id}
-                      user={user}
-                      authUser={authUser}
-                      isOnline={onlineUser.includes(user.id)}
-                    />
-                  )
-                );
-              })}
+              <div className="collapse-content bg-opacity-0 p-0 text-white peer-checked:bg-opacity-0">
+                <ul className="flex flex-col">
+                  <User key={authUser.id} user={authUser} isAuthUser />
+                  {users.map(user => {
+                    const { id } = user;
+                    const isJoined = currentRoom.users.includes(id);
+                    return isJoined && <User key={id} user={user} />;
+                  })}
+                </ul>
+              </div>
             </div>
           )}
         </div>
@@ -97,6 +70,6 @@ const Users = () => {
       )}
     </>
   );
-};
+});
 
 export default Users;

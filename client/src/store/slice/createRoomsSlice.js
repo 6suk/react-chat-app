@@ -1,0 +1,53 @@
+import { produce } from 'immer';
+import { toast } from 'react-hot-toast';
+
+export const roomsInit = {
+  isRoomsLoading: false,
+  rooms: [],
+};
+
+export const createRoomsSlice = (set, get) => ({
+  ...roomsInit,
+
+  getRooms: async fs => {
+    try {
+      set({ isRoomsLoading: true });
+      const responseJson = await fs.get('/rooms');
+      set({ rooms: responseJson.rooms });
+    } catch (error) {
+      toast.error(error.message);
+      console.log('🚨 useGetRooms Error', error.message);
+    } finally {
+      set({ isRoomsLoading: false });
+    }
+  },
+
+  findRoomById: id => {
+    return get().rooms.find(room => room.id === id);
+  },
+
+  addRoom: room =>
+    set(
+      produce(state => {
+        state.rooms.push(room);
+      })
+    ),
+
+  removeRoom: roomIds =>
+    set(
+      produce(state => {
+        state.rooms = state.rooms.filter(room => !roomIds.includes(room.id));
+      })
+    ),
+
+  addUsersToRoom: (id, users) =>
+    set(
+      produce(state => {
+        const index = get().rooms.findIndex(room => room.id === id);
+        if (index >= 0) {
+          const updateRoom = { ...get().rooms[index], users };
+          state.rooms[index] = updateRoom;
+        }
+      })
+    ),
+});

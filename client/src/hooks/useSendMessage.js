@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 import { useFetch } from '@context/FetchContext';
-import useRoomStore from '@store/useRoomStore';
+import { getCurrentRoom } from '@store/index';
 
 const useSendMessage = () => {
   const fs = useFetch();
-  const { currentRoom, setMessages, messages } = useRoomStore();
+  const currentRoom = getCurrentRoom();
   const [isLoading, setIsLoading] = useState();
 
   const sendMessage = async message => {
@@ -14,18 +14,11 @@ const useSendMessage = () => {
       handleInputErrors(message);
       setIsLoading(true);
 
-      const responseMessage = await fs.post(
-        `/messages/send/${currentRoom.id}`,
-        {
-          body: JSON.stringify({
-            content: message,
-          }),
-        }
-      );
-
-      if (responseMessage) {
-        setMessages([...messages, responseMessage.message]);
-      }
+      await fs.post(`/messages/send/${currentRoom.id}`, {
+        body: JSON.stringify({
+          content: message,
+        }),
+      });
     } catch (error) {
       toast.error(error.message);
       console.log('🚨 useSendMessage Error', error);

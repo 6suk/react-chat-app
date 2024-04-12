@@ -1,13 +1,13 @@
 import { Toaster } from 'react-hot-toast';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
-import { useAuthContext } from '@context/AuthContext';
+import { useAuthUser } from '@store/index';
 
 import Auth from '@pages/Auth';
 import Home from '@pages/Home';
 
 export default function App() {
-  const { authUser } = useAuthContext();
+  const authUser = useAuthUser();
 
   return (
     <>
@@ -22,8 +22,8 @@ export default function App() {
             element={!authUser ? <Auth /> : <Navigate to="/" />}
           />
         </Routes>
-        <Toaster />
       </div>
+      <Toaster />
     </>
   );
 }

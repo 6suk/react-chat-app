@@ -1,31 +1,38 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 
 import { useFetch } from '@context/FetchContext';
-import useRoomStore from '@store/useRoomStore';
+import { getActions } from '@store/index';
+import { useBoundStore } from '@store/useBoundStore';
 
 const useRoomMessages = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const { setMessages } = getActions();
   const fs = useFetch();
 
-  const [isLoading, setIsLoading] = useState(false);
-  const { currentRoom, setMessages } = useRoomStore();
-
+  // fetchMessages
   useEffect(() => {
-    const fetchRoomMessages = async () => {
-      setIsLoading(true);
-      try {
-        const response = await fs.get(`/messages/${currentRoom.id}`);
-        setMessages(response.messages);
-      } catch (error) {
-        toast.error(error.message);
-        console.log('🚨 useGetMessages Error', error.message);
-      } finally {
-        setIsLoading(false);
+    const unsub = useBoundStore.subscribe(
+      state => state.currentRoom,
+      currentRoom => {
+        if (currentRoom?.id) fetchRoomMessages(currentRoom);
       }
-    };
+    );
+    return unsub;
+  }, []);
 
-    if (currentRoom?.id) fetchRoomMessages();
-  }, [currentRoom?.id]);
+  const fetchRoomMessages = useCallback(async currentRoom => {
+    setIsLoading(true);
+    try {
+      const response = await fs.get(`/messages/${currentRoom.id}`);
+      setMessages(response.messages);
+    } catch (error) {
+      toast.error(error.message);
+      console.log('🚨 useGetMessages Error', error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   return { isLoading };
 };

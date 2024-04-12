@@ -13,20 +13,16 @@ const CreateRoomModal = ({ isModalOpen, setIsModalOpen, menu, setMenu }) => {
     e.preventDefault();
     createRoom(title); // fetch
     setIsModalOpen({ ...isModalOpen, chat: false });
+    setMenu('rooms')
     setTitle('');
   };
 
   const handleCancelClick = () => {
-    setMenu({
-      menu: menu.dp,
-      dp: menu.dp,
-    });
-
+    setMenu('rooms');
     setIsModalOpen({
       ...isModalOpen,
       chat: false,
     });
-
     setTitle('');
   };
 

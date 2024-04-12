@@ -1,6 +1,6 @@
 import uuid from 'uuid4';
 
-import { io } from '../socket/socket.js';
+import { io, socketJoin } from '../socket/socket.js';
 
 import { removeMessageByRoomId } from '../service/message.service.js';
 import {
@@ -44,6 +44,7 @@ export const createRoom = async (req, res) => {
     );
 
     // socket
+    socketJoin({ userId: user.id, roomId: room.id });
     io.sockets.emit('new room', responseRoom);
     await setAdminMessage({
       io,
@@ -78,7 +79,7 @@ export const removeRooms = async (req, res) => {
     }, []);
 
     // socket
-    io.sockets.emit('removed room', roomIds);
+    io.sockets.emit('removed room', { roomIds, userId });
     const response = { ...(req.message || {}), rooms: statusArray };
     res.status(200).json(response);
   } catch (error) {

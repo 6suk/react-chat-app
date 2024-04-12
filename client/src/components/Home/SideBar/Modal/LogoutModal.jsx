@@ -7,10 +7,7 @@ const LogoutModal = ({ isModalOpen, setIsModalOpen, menu, setMenu }) => {
   const className = isModalOpen.logout ? 'modal-open' : '';
 
   const handleCancelClick = () => {
-    setMenu({
-      menu: menu.dp,
-      dp: menu.dp,
-    });
+    setMenu('users');
 
     setIsModalOpen({
       ...isModalOpen,
