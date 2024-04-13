@@ -44,13 +44,13 @@ export const createRoom = async (req, res) => {
     );
 
     // socket
-    socketJoin({ userId: user.id, roomId: room.id });
     io.sockets.emit('new room', responseRoom);
     await setAdminMessage({
       io,
       room,
       content: `${user.name}님이 [${room.title}] 방을 생성하셨습니다!`,
     });
+    socketJoin({ userId: user.id, roomId: room.id });
     res.status(200).json(responseRoom);
   } catch (error) {
     console.log('🚨 CreatedRoom Controller Error! : ', error);

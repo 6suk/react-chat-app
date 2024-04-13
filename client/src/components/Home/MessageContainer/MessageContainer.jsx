@@ -1,26 +1,24 @@
-import useRoomMessages from '@hooks/useRoomMessages';
-import { getAuthUser, useCurrentRoom } from '@store/index';
+import { useAuthUser, useCurrentRoom } from '@store/index';
 
 import ChatInput from '@components/Home/MessageContainer/ChatInput';
-import ChatTopInfo from '@components/Home/MessageContainer/ChatTopInfo';
-import Messages from '@components/Home/MessageContainer/Messages';
-import { NoSelectedRoom } from '@components/Home/MessageContainer/NoSelectedRoom';
+import Header from '@components/Home/MessageContainer/Header';
+import Messages from '@components/Home/MessageContainer/Messages/Messages';
+import NoSelectedRoom from '@components/Home/MessageContainer/NoSelectedRoom';
 
 const MessageContainer = () => {
   const currentRoom = useCurrentRoom();
-  const authUser = getAuthUser();
-  const { isLoading } = useRoomMessages();
+  const authUser = useAuthUser();
 
   return (
     <>
       {currentRoom ? (
-        <div className="flex h-full w-full flex-col gap-6 overflow-auto bg-white px-8 py-6 opacity-90">
-          <ChatTopInfo />
-          <Messages />
-          <ChatInput disabled={isLoading} />
-        </div>
+        <article className="flex h-full w-full flex-col gap-6 overflow-auto bg-white px-8 py-6 opacity-90">
+          <Header currentRoom={currentRoom} authUser={authUser} />
+          <Messages authUser={authUser} />
+          <ChatInput currentRoom={currentRoom} />
+        </article>
       ) : (
-        <NoSelectedRoom />
+        <NoSelectedRoom authUser={authUser} />
       )}
     </>
   );

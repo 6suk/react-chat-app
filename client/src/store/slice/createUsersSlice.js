@@ -29,7 +29,7 @@ export const createUsersSlice = (set, get) => ({
   addUser: user =>
     set(
       produce(state => {
-        state.users = state.users.push(user);
+        state.users.push(user);
       })
     ),
 

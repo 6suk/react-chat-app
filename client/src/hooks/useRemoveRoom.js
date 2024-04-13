@@ -10,6 +10,7 @@ const useRemoveRoom = () => {
   const removeRoom = async id => {
     try {
       setIsLoading(true);
+
       const response = await fs.delete('/room', {
         body: JSON.stringify({ rooms: [id] }),
       });

@@ -10,6 +10,8 @@ const roomsSelector = state => state.rooms;
 const isUsersLoadingSelector = state => state.isUsersLoading;
 const usersSelector = state => state.users;
 const onlineUsersSelector = state => state.onlineUsers;
+const menuSelector = state => state.menu;
+const modalSelector = state => state.modal;
 
 // use
 export const useCurrentRoom = () => useBoundStore(currentRoomSelector);
@@ -19,6 +21,8 @@ export const useRooms = () => useBoundStore(roomsSelector);
 export const useIsRoomsLoading = () => useBoundStore(isRoomsLoadingSelector);
 export const useIsUsersLoading = () => useBoundStore(isUsersLoadingSelector);
 export const useUsers = () => useBoundStore(usersSelector);
+export const useMenu = () => useBoundStore(menuSelector);
+export const useModal = () => useBoundStore(modalSelector);
 
 // get
 export const getCurrentRoom = () =>
@@ -26,6 +30,8 @@ export const getCurrentRoom = () =>
 export const getAuthUser = () => authUserSelector(useBoundStore.getState());
 export const getRooms = () => roomsSelector(useBoundStore.getState());
 export const getUsers = () => usersSelector(useBoundStore.getState());
+export const getMenu = () => menuSelector(useBoundStore.getState());
+export const getModal = () => modalSelector(useBoundStore.getState());
 
 // actions
 export const getActions = () => {
@@ -42,6 +48,9 @@ export const getActions = () => {
   const getRooms = useBoundStore.getState().getRooms;
   const socketOpen = useBoundStore.getState().socketOpen;
   const socketClose = useBoundStore.getState().socketClose;
+  const setMenu = useBoundStore.getState().setMenu;
+  const setModal = useBoundStore.getState().setModal;
+  const closeModal = useBoundStore.getState().closeModal;
 
   return {
     setCurrentRoom,
@@ -57,5 +66,8 @@ export const getActions = () => {
     getRooms,
     socketClose,
     socketOpen,
+    setMenu,
+    setModal,
+    closeModal,
   };
 };

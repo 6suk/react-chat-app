@@ -8,6 +8,7 @@ import {
   createCurrentRoomSlice,
   currentRoomInit,
 } from '@store/slice/createCurrentRoomSlice';
+import { createMeunSlice, menuInit } from '@store/slice/createMeunSlice';
 import { createRoomsSlice, roomsInit } from '@store/slice/createRoomsSlice';
 import { createSocketSlice, socketInit } from '@store/slice/createSocketSlice';
 import { createUsersSlice, usersInit } from '@store/slice/createUsersSlice';
@@ -21,6 +22,7 @@ const resetToInitial = set => ({
       ...socketInit,
       ...roomsInit,
       ...usersInit,
+      ...menuInit,
     }),
 });
 
@@ -36,6 +38,7 @@ export const useBoundStore = create(
             ...createSocketSlice(...a),
             ...createRoomsSlice(...a),
             ...createUsersSlice(...a),
+            ...createMeunSlice(...a),
             ...resetToInitial(...a),
           }),
           {

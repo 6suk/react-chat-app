@@ -20,7 +20,6 @@ export const createSocketSlice = (set, get) => ({
       set({ socket });
 
       socket.on('onlineUser', onlineUsers => {
-        console.log('🚀 ~ createSocketSlice ~ onlineUsers:', onlineUsers);
         get().setOnlineUsers(onlineUsers);
         get().setSortUser(onlineUsers);
       });
@@ -32,7 +31,6 @@ export const createSocketSlice = (set, get) => ({
         const currentRoom = get().currentRoom;
         const alarms = get().alarms;
         const room = get().findRoomById(roomId);
-        console.log('🚀 ~ createSocketSlice ~ room:', room);
 
         // 1. currentRoom일 때
         if (roomId === currentRoom?.id) {
@@ -40,7 +38,7 @@ export const createSocketSlice = (set, get) => ({
           return;
         }
 
-        // 2. currentRoom은 아니지만 joinRoom일 때
+        // 2. currentRoom은 아니지만 joinRoom일 때 (알림)
         else {
           if (!alarms.includes(roomId)) {
             get().addAlarm(roomId);
@@ -49,22 +47,24 @@ export const createSocketSlice = (set, get) => ({
         }
       });
 
-      socket?.on('new room', room => {
+      socket.on('new room', room => {
+        console.log(room);
         get().addRoom(room);
       });
 
-      socket?.on('removed room', ({ roomIds, userId }) => {
+      socket.on('removed room', ({ roomIds, userId }) => {
         const currentRoom = get().currentRoom;
         const authUser = get().authUser;
         get().removeRoom(roomIds);
 
-        if (roomIds.includes(currentRoom?.id) && userId !== authUser.id) {
-          set({ currentRoom: null });
-          toast.error('참여 중인 방이 삭제 되었습니다!');
+        if (roomIds.includes(currentRoom?.id)) {
+          get().setCurrentRoom(null);
+          if (userId !== authUser.id)
+            toast.error('참여 중인 방이 삭제 되었습니다!');
         }
       });
 
-      socket?.on('new join', ({ id, joinedUsers }) => {
+      socket.on('new join', ({ id, joinedUsers }) => {
         get().addUsersToRoom(id, joinedUsers);
         const currentRoom = get().currentRoom;
         if (currentRoom?.id === id) {
@@ -73,11 +73,11 @@ export const createSocketSlice = (set, get) => ({
         }
       });
 
-      socket?.on('new user', id => {
+      socket.on('new user', id => {
         get().addUser(id);
       });
 
-      socket?.on('removed user', id => {
+      socket.on('removed user', id => {
         get().removeUser(id);
       });
     }
