@@ -29,6 +29,7 @@ const ChatInput = ({ currentRoom }) => {
         value={message}
         onChange={e => setMessage(e.target.value)}
         ref={inputRef}
+        autoComplete="off"
       />
       <button
         className="absolute inset-y-0 end-0 mx-4 my-2 flex items-center text-secondary disabled:hidden"

@@ -34,6 +34,7 @@ const CreateRoomModal = () => {
         value={title}
         disabled={isLoading}
         ref={inputRef}
+        autoComplete="off"
       />
     </ModalLayout>
   );

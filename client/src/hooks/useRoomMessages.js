@@ -16,6 +16,9 @@ const useRoomMessages = () => {
       state => state.currentRoom,
       currentRoom => {
         if (currentRoom?.id) fetchRoomMessages(currentRoom.id);
+      },
+      {
+        fireImmediately: true,
       }
     );
     return unsub;

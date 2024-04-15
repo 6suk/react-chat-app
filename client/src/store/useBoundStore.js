@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { devtools, persist, subscribeWithSelector } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 
-import { alarmInit, createAlarmSlice } from '@store/slice/createAlarmSlice';
+import { alarmInit, createAlarmSlice } from '@store/slice/createAlarmSlice.jsx';
 import { authInit, createAuthSlice } from '@store/slice/createAuthSlice';
 import {
   createCurrentRoomSlice,
@@ -13,8 +13,9 @@ import { createRoomsSlice, roomsInit } from '@store/slice/createRoomsSlice';
 import { createSocketSlice, socketInit } from '@store/slice/createSocketSlice';
 import { createUsersSlice, usersInit } from '@store/slice/createUsersSlice';
 
-const resetToInitial = set => ({
-  resetToInitial: () =>
+const resetToInitial = (set, get) => ({
+  resetToInitial: () => {
+    get().socketClose();
     set({
       ...currentRoomInit,
       ...alarmInit,
@@ -23,7 +24,8 @@ const resetToInitial = set => ({
       ...roomsInit,
       ...usersInit,
       ...menuInit,
-    }),
+    });
+  },
 });
 
 export const useBoundStore = create(

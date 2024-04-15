@@ -32,6 +32,7 @@ const AuthForm = () => {
         placeholder="닉네임"
         onChange={e => setInput({ ...input, userName: e.target.value })}
         value={input.userName}
+        autoComplete="off"
       />
       <div className="join join-vertical w-full sm:join-horizontal">
         <input

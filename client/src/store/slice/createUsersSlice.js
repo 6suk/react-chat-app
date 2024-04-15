@@ -48,7 +48,6 @@ export const createUsersSlice = (set, get) => ({
         const onlineUserIds = onlineUsers.filter(id => id !== authUser.id);
 
         if (onlineUserIds?.length > 0) {
-          console.log('sorting...');
           const onlineUsers = users.filter(user =>
             onlineUserIds.includes(user.id)
           );
