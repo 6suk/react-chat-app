@@ -25,8 +25,6 @@ export const createSocketSlice = (set, get) => ({
       });
 
       socket.on('message', message => {
-        console.log('🚀 ~ createSocketSlice ~ message:', message);
-
         const roomId = message.room;
         const currentRoom = get().currentRoom;
         const alarms = get().alarms;
@@ -43,7 +41,7 @@ export const createSocketSlice = (set, get) => ({
           if (!alarms.includes(roomId)) {
             get().addAlarm(roomId);
           }
-          get().setMessageAlarm(room, message);
+          get().toastAlarm(room, message);
         }
       });
 
@@ -86,7 +84,7 @@ export const createSocketSlice = (set, get) => ({
   socketClose: () => {
     const socket = get().socket;
     if (socket) {
-      socket.close;
+      socket.close();
       set({ socket: null });
     }
   },

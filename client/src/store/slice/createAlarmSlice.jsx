@@ -1,6 +1,8 @@
 import { produce } from 'immer';
 import { toast } from 'react-hot-toast';
 
+import AlarmToast from '@components/Common/AlarmToast';
+
 export const alarmInit = {
   alarms: [], // roomId Array
 };
@@ -20,14 +22,7 @@ export const createAlarmSlice = (set, get) => ({
       })
     ),
 
-  setMessageAlarm: (room, message) => {
-    toast(
-      `🔔\n'${room.title}' 방에 알림이 왔어요!\n\n${message.from.name} : ${message.content}`,
-      {
-        style: {
-          textAlign: 'center',
-        },
-      }
-    );
+  toastAlarm: (room, message) => {
+    toast.custom(t => <AlarmToast room={room} message={message} t={t} />);
   },
 });
