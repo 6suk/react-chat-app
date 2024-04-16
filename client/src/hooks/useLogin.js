@@ -21,14 +21,9 @@ const useLogin = () => {
         }),
       });
 
-      if (response.error) {
-        throw new Error(response.error || '다시 시도해주세요!');
-      }
-
       setAuthUser(response);
     } catch (error) {
       console.log('🚨 useLogin Error', error.message);
-      toast.error(error.message);
     } finally {
       setIsLoading(false);
     }
@@ -36,6 +31,7 @@ const useLogin = () => {
 
   const handleInputErrors = (name, gender) => {
     if (!name.trim() || !gender) {
+      toast.error('닉네임 및 성별은 필수 항목입니다!');
       throw new Error('닉네임 및 성별은 필수 항목입니다!');
     }
   };

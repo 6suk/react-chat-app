@@ -21,7 +21,7 @@ const protectRoute = async (req, res, next) => {
     const user = await getUserById(decoded.id);
 
     if (!user) {
-      res.status(401).json({ error: '존재하지 않는 유저입니다.' });
+      res.status(403).json({ error: '존재하지 않는 유저입니다.' });
       return;
     }
 

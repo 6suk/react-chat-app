@@ -17,13 +17,9 @@ const useCreateRoom = () => {
         body: JSON.stringify({ title }),
       });
 
-      if (room.error) {
-        throw new Error(room.error);
-      }
       setCurrentRoom(room);
     } catch (error) {
-      console.log('🚨 useLogin Error', error.message);
-      toast.error(error.message);
+      console.log('🚨 useCreateRoom Error', error.message);
     } finally {
       setIsLoading(false);
     }
@@ -31,6 +27,7 @@ const useCreateRoom = () => {
 
   const handleInputErrors = title => {
     if (!title.trim()) {
+      toast.error('제목은 필수 항목입니다!');
       throw new Error('제목은 필수 항목입니다!');
     }
   };

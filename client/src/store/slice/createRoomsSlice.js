@@ -9,8 +9,9 @@ export const roomsInit = {
 export const createRoomsSlice = (set, get) => ({
   ...roomsInit,
 
-  getRooms: async fs => {
+  getRooms: async () => {
     try {
+      const fs = get().fetchInstance;
       set({ isRoomsLoading: true });
       const responseJson = await fs.get('/rooms');
       set({ rooms: responseJson.rooms });

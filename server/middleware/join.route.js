@@ -17,7 +17,7 @@ const joinRoute = async (req, res, next) => {
     // 방이 존재 하는지
     const isRoomUniqe = await isRoomUnique(id);
     if (isRoomUniqe) {
-      res.status(401).json({ error: '존재하지 않는 방입니다.' });
+      res.status(404).json({ error: '존재하지 않는 방입니다.' });
       return;
     }
 
@@ -37,7 +37,7 @@ const joinRoute = async (req, res, next) => {
       await setUserRooms(user.id, id);
 
       // socket
-      socketJoin({ userId: user.id, roomId: id });
+      await socketJoin({ userId: user.id, roomId: id });
       io.emit('new join', { id, joinedUsers: users });
       await setAdminMessage({
         io,

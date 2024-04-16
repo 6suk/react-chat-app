@@ -10,8 +10,9 @@ export const usersInit = {
 export const createUsersSlice = (set, get) => ({
   ...usersInit,
 
-  getUsers: async fs => {
+  getUsers: async () => {
     try {
+      const fs = get().fetchInstance;
       set({ isUsersLoading: true });
       const response = await fs.get('/user');
       set({ users: response.users });

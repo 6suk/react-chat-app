@@ -2,8 +2,8 @@ import jwt from 'jsonwebtoken';
 
 import JsonFileManager from '../utils/jsonFileManager.js';
 
-const fileName = 'user.json';
-const fm = new JsonFileManager(fileName);
+const fileName = './data/user.json';
+const fm = new JsonFileManager(fileName, []);
 
 export const getUserById = async id => {
   const users = await fm.readCachedData();
@@ -78,4 +78,6 @@ export const setGenerateToken = ({ id, name }, res) => {
     sameSite: 'strict',
     secure: process.env.NODE_ENV !== 'development',
   });
+
+  return token;
 };

@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 
-import { useFetch } from '@context/FetchContext';
 import { getActions, useMenu } from '@store/index';
 
 import Menu from '@components/Home/SideBar/Menu/Menu';
@@ -13,13 +12,12 @@ const SideBarComponents = {
 };
 
 const SideBar = () => {
-  const fs = useFetch();
   const menu = useMenu();
   const { getUsers, getRooms } = getActions();
 
   useEffect(() => {
-    getUsers(fs);
-    getRooms(fs);
+    getUsers();
+    getRooms();
   }, []);
 
   return (

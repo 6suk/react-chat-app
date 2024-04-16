@@ -26,7 +26,6 @@ const useRemoveRoom = () => {
       }
     } catch (error) {
       console.log('🚨 useLogout Error', error.message);
-      toast.error(error.message);
     } finally {
       setIsLoading(false);
     }

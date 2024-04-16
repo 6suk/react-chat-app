@@ -1,22 +1,37 @@
 import fs from 'fs-extra';
 
-const ROOT_DIRECTORY = './data/';
-
 class JsonFileManager {
-  constructor(fileName) {
-    this.fileName = fileName;
-    this.filePath = `${ROOT_DIRECTORY}${fileName}`;
+  constructor(filePath, initialData) {
+    this.filePath = filePath;
+    this.initialData = initialData;
     this.cachedData = null;
   }
 
   async readFile() {
     try {
+      const stats = await fs.stat(this.filePath);
+      if (stats.size === 0) return await this.createFileWithInitialData();
+
       const data = await fs.readFile(this.filePath);
       return JSON.parse(data);
     } catch (error) {
-      throw new Error(
-        `Error reading JSON file '${this.fileName}': ${error.message}`
+      if (error.code === 'ENOENT') return this.createFileWithInitialData();
+      throw this.errorMessage('reading', error);
+    }
+  }
+
+  async createFileWithInitialData() {
+    try {
+      // 빈 파일 생성
+      await fs.ensureFile(this.filePath);
+      // 초기 데이터 쓰기
+      await fs.writeFile(
+        this.filePath,
+        JSON.stringify(this.initialData, null, 2)
       );
+      return this.initialData;
+    } catch (error) {
+      throw this.errorMessage('creating', error);
     }
   }
 
@@ -24,9 +39,7 @@ class JsonFileManager {
     try {
       await fs.writeFile(this.filePath, JSON.stringify(data, null, 2));
     } catch (error) {
-      throw new Error(
-        `Error writing JSON file '${this.fileName}': ${error.message}`
-      );
+      throw this.errorMessage('writing', error);
     }
   }
 
@@ -44,9 +57,15 @@ class JsonFileManager {
       await this.writeFile(newData);
       this.cachedData = newData; // Update cached data
     } catch (error) {
-      console.error(`🚨 JSON File Operation Error: ${error}`);
-      throw error;
+      throw this.errorMessage('updating', error);
     }
+  }
+
+  errorMessage(operation, error) {
+    const fileName = this.filePath.split('/').pop();
+    return new Error(
+      `🚨 Error! Failed to ${operation} file - ${fileName} : ${error.message}`
+    );
   }
 }
 

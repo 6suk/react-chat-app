@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { toast } from 'react-hot-toast';
 
 import { useFetch } from '@context/FetchContext';
 import { getCurrentRoom } from '@store/index';
@@ -20,7 +19,6 @@ const useSendMessage = () => {
         }),
       });
     } catch (error) {
-      toast.error(error.message);
       console.log('🚨 useSendMessage Error', error);
     } finally {
       setIsLoading(false);

@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useState } from 'react';
-import { toast } from 'react-hot-toast';
 
 import { useFetch } from '@context/FetchContext';
 import { getActions } from '@store/index';
@@ -30,7 +29,6 @@ const useRoomMessages = () => {
       const response = await fs.get(`/messages/${id}`);
       setMessages(response.messages);
     } catch (error) {
-      toast.error(error.message);
       console.log('🚨 useGetMessages Error', error.message);
     } finally {
       setIsLoading(false);

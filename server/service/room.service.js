@@ -1,7 +1,7 @@
 import JsonFileManager from '../utils/jsonFileManager.js';
 
-const fileName = 'room.json';
-const fm = new JsonFileManager(fileName);
+const fileName = './data/room.json';
+const fm = new JsonFileManager(fileName, {});
 
 export const updateRoom = async newData => {
   await fm.updateFile(existingData => ({ ...existingData, ...newData }));
@@ -40,7 +40,7 @@ export const getRoomRemovalStatus = async (roomId, userId) => {
     return {
       id: roomId,
       ok: false,
-      status: 401,
+      status: 404,
       message: '존재하지 않는 방입니다.',
     };
   }

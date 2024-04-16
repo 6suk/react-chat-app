@@ -2,20 +2,6 @@ import { getAllRooms, getUserRooms } from '../service/room.service.js';
 
 import { formatAddUsers } from '../utils/addUserUtils.js';
 
-/**
- *  [
- *    {
- *      id : UUID, (uni)
- *      title : string
- *      created_user_id : user_id
- *      created_at : timestamp
- *      updated_at : timestamp
- *      users : user_id array
- *      messages : message_id array
- *    }
- *  ]
- */
-
 export const getRooms = async (req, res) => {
   try {
     const roomsObj = await getAllRooms();
