@@ -8,7 +8,11 @@ import {
   removeRoom,
   updateRoom,
 } from '../service/room.service.js';
-import { setCreatedRoom, setUserRooms } from '../service/user.service.js';
+import {
+  removeUserRoom,
+  setCreatedRoom,
+  setUserRooms,
+} from '../service/user.service.js';
 
 import { formatAddUser } from '../utils/addUserUtils.js';
 import { setAdminMessage } from '../utils/setAdminMessage.js';
@@ -27,8 +31,6 @@ export const createRoom = async (req, res) => {
       created_user_id: user.id,
       users: [user.id],
       created_at: timestamp,
-      updated_at: timestamp,
-      messages: [],
     };
 
     // set json data
@@ -51,7 +53,7 @@ export const createRoom = async (req, res) => {
       content: `${user.name}님이 [${room.title}] 방을 생성하셨습니다!`,
     });
     await socketJoin({ userId: user.id, roomId: room.id });
-    res.status(200).json(responseRoom);
+    res.status(200).json({ room: responseRoom });
   } catch (error) {
     console.log('🚨 CreatedRoom Controller Error! : ', error);
     res.status(500).json({
@@ -73,6 +75,7 @@ export const removeRooms = async (req, res) => {
       if (status.ok) {
         await removeRoom(id); // room 삭제
         await removeMessageByRoomId(id); // 삭제되는 방의 메세지 전부 삭제
+        await removeUserRoom(userId, id);
       }
 
       return [...(await prevPromise), status];
@@ -80,7 +83,7 @@ export const removeRooms = async (req, res) => {
 
     // socket
     io.sockets.emit('removed room', { roomIds, userId });
-    const response = { ...(req.message || {}), rooms: statusArray };
+    const response = { ...(req.logout || {}), rooms: statusArray };
     res.status(200).json(response);
   } catch (error) {
     console.log('🚨 RemovedRoom Controller Error! : ', error);

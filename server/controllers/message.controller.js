@@ -9,22 +9,6 @@ import {
 
 import { formatAddUser, formatAddUsers } from '../utils/addUserUtils.js';
 
-/**
- *  room_id {
- *    [ 
- *      {
- *        room_id : room_id
- *        from : user_id
- *        to : user_id array
- *        content : string
- *        created_at : timeStamp
- *        room : room_id
- *      }
- *    ],
- *  }
-
- */
-
 export const sendMessage = async (req, res) => {
   try {
     const { id, users } = req.room;
@@ -43,12 +27,12 @@ export const sendMessage = async (req, res) => {
     // response formatting!
     const responseMessage = await formatAddUser(newMessage, 'from');
     io.to(id).emit('message', responseMessage);
-    res.status(200).json({
+    return res.status(200).json({
       message: responseMessage,
     });
   } catch (error) {
     console.log('🚨 sendMessage Controller Error! : ', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Server Error!',
     });
   }

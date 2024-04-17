@@ -1,5 +1,4 @@
 import { produce } from 'immer';
-import { toast } from 'react-hot-toast';
 
 export const roomsInit = {
   isRoomsLoading: false,
@@ -16,7 +15,6 @@ export const createRoomsSlice = (set, get) => ({
       const responseJson = await fs.get('/rooms');
       set({ rooms: responseJson.rooms });
     } catch (error) {
-      toast.error(error.message);
       console.log('🚨 useGetRooms Error', error.message);
     } finally {
       set({ isRoomsLoading: false });

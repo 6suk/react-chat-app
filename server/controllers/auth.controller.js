@@ -45,7 +45,7 @@ export const login = async (req, res) => {
     await updateUser(newUser);
 
     io.sockets.emit('new user', reponseUser);
-    res.status(200).json(reponseUser);
+    res.status(200).json({ user: reponseUser });
   } catch (error) {
     console.log('🚨 Auth Controller Error! : ', error);
     res.status(500).json({
@@ -65,7 +65,7 @@ export const logout = async (req, res, next) => {
     res.cookie('jwt', '', { maxAge: 0 });
     io.sockets.emit('removed user', id);
 
-    req.message = {
+    req.logout = {
       logout: {
         userId: id,
         status: 200,
@@ -83,18 +83,20 @@ export const logout = async (req, res, next) => {
 
 export const refreshToken = async (req, res) => {
   try {
-    const { id, name } = req.body.user;
+    const { id, name, gender } = req.body;
     const getUser = await getUserById(id);
 
     // DB에 user 정보가 없을 경우
-    if (!getUser || getUser?.name !== name) {
-      res.status(401).json({
+    if (!getUser || getUser?.name !== name || getUser?.gender !== gender) {
+      res.status(403).json({
         error: '존재하지 않는 유저입니다.',
       });
       return;
     }
     setGenerateToken({ id, name }, res);
-    res.status(200).json({ user: req.body.user });
+    res
+      .status(200)
+      .json({ message: '토큰이 갱신 되었습니다.', user: req.body });
   } catch (error) {
     console.log('🚨 refreshToken Controller Error! : ', error);
     res.status(500).json({

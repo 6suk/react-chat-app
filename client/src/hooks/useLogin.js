@@ -21,7 +21,7 @@ const useLogin = () => {
         }),
       });
 
-      setAuthUser(response);
+      setAuthUser(response.user);
     } catch (error) {
       console.log('🚨 useLogin Error', error.message);
     } finally {

@@ -1,5 +1,4 @@
 import { produce } from 'immer';
-import { toast } from 'react-hot-toast';
 
 export const usersInit = {
   isUsersLoading: false,
@@ -14,10 +13,9 @@ export const createUsersSlice = (set, get) => ({
     try {
       const fs = get().fetchInstance;
       set({ isUsersLoading: true });
-      const response = await fs.get('/user');
+      const response = await fs.get('/users');
       set({ users: response.users });
     } catch (error) {
-      toast.error(error.message);
       console.log('🚨 useGetRooms Error', error.message);
     } finally {
       set({ isUsersLoading: false });

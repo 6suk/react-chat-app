@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 
+import url from '@/env.config';
+
 import useErrorHandler from '@hooks/useErrorHandler';
 import { useBoundStore } from '@store/useBoundStore';
 
@@ -15,7 +17,7 @@ export const FetchContextProvider = ({ children }) => {
   const [fetchInstance, setFetchInstance] = useState(null);
   const { refreshToken, handle403Error, handle404Error } = useErrorHandler();
 
-  const baseURL = import.meta.env.VITE_API_BASE_URL;
+  const baseURL = url.api;
   const initOptions = {
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include',

@@ -1,6 +1,8 @@
 import { toast } from 'react-hot-toast';
 import { io } from 'socket.io-client';
 
+import url from '@/env.config';
+
 export const socketInit = {
   socket: null,
 };
@@ -11,7 +13,7 @@ export const createSocketSlice = (set, get) => ({
   socketOpen: () => {
     const user = get().authUser;
     if (user) {
-      const socket = io(import.meta.env.VITE_BASE_URL, {
+      const socket = io(url.base, {
         query: {
           userId: user.id,
         },

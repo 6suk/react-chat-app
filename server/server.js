@@ -11,18 +11,20 @@ import roomRoute from './routes/room.route.js';
 import roomsRoute from './routes/rooms.route.js';
 import userRoute from './routes/user.route.js';
 
-const PORT = process.env.PORT || 3001;
+import env from './env.config.js';
+
+const PORT = env.port;
 
 app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: process.env.ORIGIN,
+    origin: env.origin,
     credentials: true,
   })
 );
 app.use('/api/auth', authRoute);
-app.use('/api/user', userRoute);
+app.use('/api/users', userRoute);
 app.use('/api/room', roomRoute);
 app.use('/api/rooms', roomsRoute);
 app.use('/api/messages', messageRoute);

@@ -17,8 +17,7 @@ const joinRoute = async (req, res, next) => {
     // 방이 존재 하는지
     const isRoomUniqe = await isRoomUnique(id);
     if (isRoomUniqe) {
-      res.status(404).json({ error: '존재하지 않는 방입니다.' });
-      return;
+      return res.status(404).json({ error: '존재하지 않는 방입니다.' });
     }
 
     const room = await getRoomById(id);
@@ -51,15 +50,15 @@ const joinRoute = async (req, res, next) => {
 
       // 변경된 room 정보 보내기
       req.room = updateRoomToUsers;
-      next();
+      return next();
     }
 
     // room 정보 보내기
     req.room = room;
-    next();
+    return next();
   } catch (error) {
     console.log('🚨 Join Room Controller Error! : ', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Server Error!',
     });
   }

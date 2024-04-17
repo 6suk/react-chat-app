@@ -3,18 +3,17 @@ import express from 'express';
 
 import { createServer } from 'http';
 
-import dotenv from 'dotenv';
 import { Server } from 'socket.io';
 
 import { getUserById } from '../service/user.service.js';
 
-dotenv.config();
+import env from '../env.config.js';
 
 const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.ORIGIN,
+    origin: env.origin,
     methods: ['GET', 'POST'],
   },
 });

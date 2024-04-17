@@ -12,8 +12,9 @@ export const noneUser = {
 // user 정보 추가
 export const formatAddUser = async (data, key, responseKey = null) => {
   if (data) {
+    const { [key]: removedKey, ...rest } = data;
     const getUser = await getUserById(data[key]);
-    return { ...data, [responseKey || key]: getUser || noneUser };
+    return { ...rest, [responseKey || key]: getUser || noneUser };
   }
   return {};
 };

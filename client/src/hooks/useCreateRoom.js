@@ -13,11 +13,11 @@ const useCreateRoom = () => {
     try {
       setIsLoading(true);
       handleInputErrors(title);
-      const room = await fs.post('/room', {
+      const response = await fs.post('/room', {
         body: JSON.stringify({ title }),
       });
 
-      setCurrentRoom(room);
+      setCurrentRoom(response.room);
     } catch (error) {
       console.log('🚨 useCreateRoom Error', error.message);
     } finally {
