@@ -4,8 +4,10 @@ import JsonFileManager from '../utils/jsonFileManager.js';
 
 import env from '../env.config.js';
 
+import { initialUserData } from './initialData.js';
+
 const fileName = './data/user.json';
-const fm = new JsonFileManager(fileName, []);
+const fm = new JsonFileManager(fileName, initialUserData || []);
 
 export const getUserById = async id => {
   const users = await fm.readCachedData();

@@ -1,7 +1,9 @@
 import JsonFileManager from '../utils/jsonFileManager.js';
 
+import { initialMessageData } from './initialData.js';
+
 const fileName = './data/message.json';
-const fm = new JsonFileManager(fileName, {});
+const fm = new JsonFileManager(fileName, initialMessageData || {});
 
 export const updateMessage = async message => {
   const roomId = message.room;
