@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { getActions } from '@store/index';
 
 const AlarmToast = ({ room, message, t }) => {
-  const { setCurrentRoom } = getActions();
+  const { setCurrentRoom, removeAlarm } = getActions();
 
   return (
     <div
@@ -16,6 +16,7 @@ const AlarmToast = ({ room, message, t }) => {
           className="flex items-start"
           onClick={() => {
             setCurrentRoom(room);
+            removeAlarm(room.id);
             toast.remove(t.id);
           }}
         >

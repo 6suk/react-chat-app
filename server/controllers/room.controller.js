@@ -50,7 +50,7 @@ export const createRoom = async (req, res) => {
     await setAdminMessage({
       io,
       room,
-      content: `${user.name}님이 [${room.title}] 방을 생성하셨습니다!`,
+      content: `[${room.title}] 방이 생성되었습니다!`,
     });
     await socketJoin({ userId: user.id, roomId: room.id });
     res.status(200).json({ room: responseRoom });
