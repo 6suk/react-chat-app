@@ -1,7 +1,9 @@
 import JsonFileManager from '../utils/jsonFileManager.js';
 
+import { initialRoomData } from './initialData.js';
+
 const fileName = './data/room.json';
-const fm = new JsonFileManager(fileName, {});
+const fm = new JsonFileManager(fileName, initialRoomData || {});
 
 export const updateRoom = async newData => {
   await fm.updateFile(existingData => ({ ...existingData, ...newData }));
