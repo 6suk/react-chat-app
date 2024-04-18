@@ -2,7 +2,6 @@
   "name": "chat-react",
   "version": "0.0.1",
   "description": "chat-react-monorepo",
-  "main": "index.js",
   "author": "6suk",
   "license": "MIT",
   "private": true,
@@ -12,6 +11,10 @@
   ],
   "scripts": {
     "client": "yarn workspace client",
-    "server": "yarn workspace server"
+    "server": "yarn workspace server",
+    "start": "concurrently \" cd client && npm start \"  \" cd server && npm start \""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }

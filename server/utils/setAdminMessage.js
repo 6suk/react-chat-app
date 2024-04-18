@@ -1,7 +1,7 @@
 import uuid from 'uuid4';
 
 import { updateMessage } from '../service/message.service.js';
-import { getUserById, updateUser } from '../service/user.service.js';
+import { updateUser, isUserUniqueByKey } from '../service/user.service.js';
 
 export const ADMIN = {
   id: 'admin',
@@ -13,8 +13,8 @@ export const ADMIN = {
 
 export const setAdminMessage = async ({ io, room, content }) => {
   // admin 계정이 없을 경우 생성
-  const admin = await getUserById('admin');
-  if (!admin) await updateUser(ADMIN);
+  const noneAdmin = await isUserUniqueByKey('id', 'admin');
+  if (noneAdmin) await updateUser(ADMIN);
 
   const message = {
     id: uuid(),
@@ -26,6 +26,6 @@ export const setAdminMessage = async ({ io, room, content }) => {
   };
 
   await updateMessage(message);
-  io.to(room.id).emit('message', { ...message, from: admin });
+  io.to(room.id).emit('message', { ...message, from: ADMIN });
   return message;
 };

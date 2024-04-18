@@ -12,8 +12,6 @@ export default {
         mytheme: {
           primary: '#cddeff',
           'primary-content': '#5a81fa',
-          // secondary: '#2c3d8f',
-          // 'secondary-content': '#f2f5ff',
           secondary: '#5a81fa',
           'secondary-content': '#f2f5ff',
           accent: '#2c3d8f',
@@ -30,8 +28,6 @@ export default {
           error: '#ff0000',
         },
       },
-      'light',
-      'dark',
     ],
   },
   plugins: [daisyui],

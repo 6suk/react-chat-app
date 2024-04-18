@@ -2,12 +2,12 @@ import { useState } from 'react';
 import toast from 'react-hot-toast';
 
 import { useFetch } from '@context/FetchContext';
-import useRoomStore from '@store/useRoomStore';
+import { getActions } from '@store/index';
 
 const useCreateRoom = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const { setCurrentRoom } = useRoomStore();
   const fs = useFetch();
+  const [isLoading, setIsLoading] = useState(false);
+  const { setCurrentRoom } = getActions();
 
   const createRoom = async title => {
     try {
@@ -17,14 +17,9 @@ const useCreateRoom = () => {
         body: JSON.stringify({ title }),
       });
 
-      if (response.error) {
-        throw new Error(response.error);
-      }
-
-      setCurrentRoom(response);
+      setCurrentRoom(response.room);
     } catch (error) {
-      console.log('🚨 useLogin Error', error.message);
-      toast.error(error.message);
+      console.log('🚨 useCreateRoom Error', error.message);
     } finally {
       setIsLoading(false);
     }
@@ -32,6 +27,7 @@ const useCreateRoom = () => {
 
   const handleInputErrors = title => {
     if (!title.trim()) {
+      toast.error('제목은 필수 항목입니다!');
       throw new Error('제목은 필수 항목입니다!');
     }
   };

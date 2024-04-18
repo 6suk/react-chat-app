@@ -2,8 +2,10 @@ import jwt from 'jsonwebtoken';
 
 import JsonFileManager from '../utils/jsonFileManager.js';
 
-const fileName = 'user.json';
-const fm = new JsonFileManager(fileName);
+import env from '../env.config.js';
+
+const fileName = './data/user.json';
+const fm = new JsonFileManager(fileName, []);
 
 export const getUserById = async id => {
   const users = await fm.readCachedData();
@@ -18,7 +20,28 @@ export const removeUser = async id => {
   await fm.updateFile(users => users.filter(user => user.id !== id));
 };
 
-export const isUserNameUnique = async (key, value) => {
+export const removeUserRoom = async (userId, roomId) => {
+  await fm.updateFile(users => {
+    const usersMap = users.map(user => {
+      if (user.id === 'admin') return user;
+
+      const isRooms = user.rooms.includes(roomId);
+      const isCreatedRoom = user.createdRooms.includes(roomId);
+      const copyUser = user;
+      if (isRooms) {
+        copyUser.rooms = user.rooms.filter(id => id !== roomId);
+      }
+      if (isCreatedRoom) {
+        copyUser.createdRooms = user.createdRooms.filter(id => id !== roomId);
+      }
+      return copyUser;
+    });
+
+    return usersMap;
+  });
+};
+
+export const isUserUniqueByKey = async (key, value) => {
   const users = await fm.readCachedData();
   // 데이터 O : 'false'
   // 데이터 X : 'true'
@@ -68,7 +91,7 @@ export const setCreatedRoom = async (id, roomId) => {
 export const setGenerateToken = ({ id, name }, res) => {
   const maxAge = 1000 * 60 * 60 * 24 * 15; // 15일
 
-  const token = jwt.sign({ id, name }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ id, name }, env.jwtKey, {
     expiresIn: maxAge,
   });
 
@@ -76,6 +99,8 @@ export const setGenerateToken = ({ id, name }, res) => {
     maxAge,
     httpOnly: true,
     sameSite: 'strict',
-    secure: process.env.NODE_ENV !== 'development',
+    secure: env.nodeENV !== 'development',
   });
+
+  return token;
 };

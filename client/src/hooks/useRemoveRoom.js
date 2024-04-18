@@ -10,6 +10,7 @@ const useRemoveRoom = () => {
   const removeRoom = async id => {
     try {
       setIsLoading(true);
+
       const response = await fs.delete('/room', {
         body: JSON.stringify({ rooms: [id] }),
       });
@@ -25,7 +26,6 @@ const useRemoveRoom = () => {
       }
     } catch (error) {
       console.log('🚨 useLogout Error', error.message);
-      toast.error(error.message);
     } finally {
       setIsLoading(false);
     }

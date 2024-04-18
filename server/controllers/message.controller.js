@@ -6,36 +6,17 @@ import {
   getMessagesByRoomId,
   updateMessage,
 } from '../service/message.service.js';
-import { getRoomById } from '../service/room.service.js';
 
 import { formatAddUser, formatAddUsers } from '../utils/addUserUtils.js';
 
-/**
- *  room_id {
- *    [ 
- *      {
- *        room_id : room_id
- *        from : user_id
- *        to : user_id array
- *        content : string
- *        created_at : timeStamp
- *        room : room_id
- *      }
- *    ],
- *  }
-
- */
-
 export const sendMessage = async (req, res) => {
   try {
-    // const room = req.room;
-    const { id } = req.params;
-    const room = await getRoomById(id);
+    const { id, users } = req.room;
     const newMessage = {
       id: uuid4(),
       room: id,
       from: req.user.id,
-      to: room.users,
+      to: users,
       created_at: Date.now(),
       content: req.body.content,
     };
@@ -45,13 +26,13 @@ export const sendMessage = async (req, res) => {
 
     // response formatting!
     const responseMessage = await formatAddUser(newMessage, 'from');
-    io.to(room.id).emit('message', responseMessage);
-    res.status(200).json({
+    io.to(id).emit('message', responseMessage);
+    return res.status(200).json({
       message: responseMessage,
     });
   } catch (error) {
     console.log('🚨 sendMessage Controller Error! : ', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Server Error!',
     });
   }

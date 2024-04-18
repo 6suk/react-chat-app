@@ -2,34 +2,33 @@ import jwt from 'jsonwebtoken';
 
 import { getUserById } from '../service/user.service.js';
 
+import env from '../env.config.js';
+
 const protectRoute = async (req, res, next) => {
   try {
     const token = req.cookies.jwt;
 
     if (!token) {
-      res.status(401).json({ error: '토근이 만료 되었습니다.' });
-      return;
+      return res.status(401).json({ error: '토근이 만료 되었습니다.' });
     }
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, env.jwtKey);
 
     if (!decoded) {
-      res.status(401).json({ error: '존재하지 않는 토큰입니다.' });
-      return;
+      return res.status(401).json({ error: '존재하지 않는 토큰입니다.' });
     }
 
     const user = await getUserById(decoded.id);
 
     if (!user) {
-      res.status(401).json({ error: '존재하지 않는 유저입니다.' });
-      return;
+      return res.status(403).json({ error: '존재하지 않는 유저입니다.' });
     }
 
     req.user = user;
-    next();
+    return next();
   } catch (error) {
     console.log('🚨 Protect Route Error! : ', error);
-    res.status(500).json({
+    return res.status(500).json({
       error: 'Server Error!',
     });
   }
