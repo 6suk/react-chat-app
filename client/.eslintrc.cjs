@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   root: true,
   env: { browser: true, es2020: true },
@@ -16,13 +18,13 @@ module.exports = {
     'import/resolver': {
       alias: {
         map: [
-          ['@', './src'],
-          ['@components', './src/components'],
-          ['@hooks', './src/hooks'],
-          ['@pages', './src/pages'],
-          ['@store', './src/store'],
-          ['@utils', './src/utils'],
-          ['@context', './src/context'],
+          ['@', path.resolve(__dirname, './src')],
+          ['@components', path.resolve(__dirname, './src/components')],
+          ['@hooks', path.resolve(__dirname, './src/hooks')],
+          ['@pages', path.resolve(__dirname, './src/pages')],
+          ['@store', path.resolve(__dirname, './src/store')],
+          ['@utils', path.resolve(__dirname, './src/utils')],
+          ['@context', path.resolve(__dirname, './src/context')],
         ],
         extensions: ['.js', '.jsx'],
       },
