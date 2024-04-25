@@ -1,3 +1,5 @@
+import { Helmet } from 'react-helmet-async';
+
 import { useAuthUser, useCurrentRoom } from '@store/index';
 
 import ChatInput from '@components/Home/MessageContainer/ChatInput';
@@ -12,11 +14,17 @@ const MessageContainer = () => {
   return (
     <>
       {currentRoom ? (
-        <article className="flex h-full w-full flex-col gap-6 overflow-auto bg-white px-8 py-6 opacity-90">
-          <Header currentRoom={currentRoom} authUser={authUser} />
-          <Messages authUser={authUser} />
-          <ChatInput currentRoom={currentRoom} />
-        </article>
+        <>
+          <Helmet>
+            <title>@6suk/chat | {currentRoom.title}</title>
+          </Helmet>
+
+          <article className="flex h-full w-full flex-col gap-6 overflow-auto bg-white px-8 py-6 opacity-90">
+            <Header currentRoom={currentRoom} authUser={authUser} />
+            <Messages authUser={authUser} />
+            <ChatInput currentRoom={currentRoom} />
+          </article>
+        </>
       ) : (
         <NoSelectedRoom authUser={authUser} />
       )}

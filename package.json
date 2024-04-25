@@ -12,9 +12,6 @@
   "scripts": {
     "client": "yarn workspace client",
     "server": "yarn workspace server",
-    "start": "concurrently \" cd client && npm start \"  \" cd server && npm start \""
-  },
-  "devDependencies": {
-    "concurrently": "^8.2.2"
+    "start": "cd client && $npm_execpath run build && cd .. && cd server && $npm_execpath start"
   }
 }

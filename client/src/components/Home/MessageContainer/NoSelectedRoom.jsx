@@ -10,11 +10,12 @@ const NoSelectedRoom = ({ authUser }) => {
       <ul className="pt-3">
         <li>✔ 채팅방을 생성할 수 있어요!</li>
         <li>✔ 만들어진 채팅방에 참여해보세요!</li>
-        <ul className="mt-5 flex items-center rounded bg-white bg-opacity-20 px-4 py-2">
-          <li>💬 : 참여중인 채팅방</li>
-          <hr className="mx-4 h-4 border-l border-white opacity-30" />
-          <li>🔔 : 새로운 메세지</li>
-        </ul>
+      </ul>
+      <ul className="mt-3 flex items-center rounded bg-white bg-opacity-20 px-4 py-2">
+        <li className="after:mx-4 after:h-4 after:border-l after:border-white after:opacity-30">
+          💬 : 참여중인 채팅방
+        </li>
+        <li>🔔 : 새로운 메세지</li>
       </ul>
     </article>
   );

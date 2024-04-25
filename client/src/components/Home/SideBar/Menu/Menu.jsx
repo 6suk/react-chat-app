@@ -8,10 +8,30 @@ import {
 import MenuItem from '@components/Home/SideBar/Menu/MenuItem';
 
 const menuItems = [
-  { name: 'rooms', icon: <AiOutlineMenu />, isModal: false },
-  { name: 'users', icon: <AiOutlineTeam />, isModal: false },
-  { name: 'chat', icon: <AiOutlineFolderAdd />, isModal: true },
-  { name: 'logout', icon: <AiOutlineLogout />, isModal: true },
+  {
+    name: 'rooms',
+    icon: <AiOutlineMenu />,
+    isModal: false,
+    ariaLabel: '채팅방 리스트 보기',
+  },
+  {
+    name: 'users',
+    icon: <AiOutlineTeam />,
+    isModal: false,
+    ariaLabel: '유저 리스트 보기',
+  },
+  {
+    name: 'chat',
+    icon: <AiOutlineFolderAdd />,
+    isModal: true,
+    ariaLabel: '채팅방 생성',
+  },
+  {
+    name: 'logout',
+    icon: <AiOutlineLogout />,
+    isModal: true,
+    ariaLabel: '로그아웃',
+  },
 ];
 
 const Menu = () => {
