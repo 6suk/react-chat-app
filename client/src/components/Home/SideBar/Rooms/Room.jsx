@@ -51,20 +51,22 @@ const Room = ({ room, isLast }) => {
   return (
     <>
       <li
-        className="flex cursor-pointer items-center justify-between rounded p-5 text-white transition duration-300 ease-in-out hover:bg-primary-content hover:text-white"
+        className="relative cursor-pointer rounded p-5 text-white transition duration-300 ease-in-out hover:bg-primary-content hover:text-white"
         onClick={() => {
           setCurrentRoom(room);
           removeAlarm(id);
         }}
         ref={liRef}
       >
-        <h3>{title}</h3>
-        <p className="flex items-center gap-2 text-sm font-light">
-          <span ref={alarmRef}>🔔</span>
-          {isHost ? <span>👑</span> : isJoined && <span>💬</span>}
-        </p>
+        <div className="flex items-center justify-between">
+          <h3>{title}</h3>
+          <p className="flex items-center gap-2 text-sm font-light">
+            <span ref={alarmRef}>🔔</span>
+            {isHost ? <span>👑</span> : isJoined && <span>💬</span>}
+          </p>
+        </div>
+        <Divider isDisplay={!isLast} className="absolute bottom-0 left-0" />
       </li>
-      <Divider isDisplay={!isLast} />
     </>
   );
 };

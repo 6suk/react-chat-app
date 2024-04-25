@@ -4,8 +4,8 @@
 
 @layer base {
   body {
-    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
-      url('/bg.jpg');
+    background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2));
+    background-image: url('/bg.jpg');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -13,6 +13,11 @@
       'Pretendard Variable', Pretendard, Roboto, 'Noto Sans KR', 'Segoe UI',
       'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
       sans-serif;
+
+    /* webp를 지원할 경우 webp로 설정 */
+    @supports (background-image: url('/bg.webp')) {
+      background-image: url('/bg.webp');
+    }
   }
 
   @font-face {
