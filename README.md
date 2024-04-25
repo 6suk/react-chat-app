@@ -14,15 +14,9 @@
 ### ◽ 실시간 채팅
 Socket.IO를 활용해 실시간으로 채팅을 주고 받을 수 있습니다.
 
-<img src="https://github.com/6suk/6suk/assets/110910042/6cd9f176-548c-46cc-9e6f-6d7c4d618185"  alt="실시간 채팅">
-
-
-<br><br>
-
-### ◽ 실시간 채팅 알림
-기존 참여했던 방의 알림을 받을 수 있습니다.
-
-<img src="https://github.com/6suk/6suk/assets/110910042/957d43e7-c960-4844-8bf6-f508ba7aeeac"  alt="실시간 채팅 알림">
+| 실시간 채팅 | 실시간 채팅 알림 |
+| --- | --- |
+| <img src="https://github.com/6suk/6suk/assets/110910042/6cd9f176-548c-46cc-9e6f-6d7c4d618185"  alt="실시간 채팅"> | <img src="https://github.com/6suk/6suk/assets/110910042/957d43e7-c960-4844-8bf6-f508ba7aeeac"  alt="실시간 채팅 알림"> |
 
 <br><br>
 
@@ -30,18 +24,13 @@ Socket.IO를 활용해 실시간으로 채팅을 주고 받을 수 있습니다.
 
 채팅방 생성 / 삭제 시 실시간으로 다른 유저들에게도 적용됩니다.
 
-#### 1. 채팅방 생성
+| 채팅방 생성 |
+| --- |
+| <img src="https://github.com/6suk/6suk/assets/110910042/416d5e31-d25f-4c4d-ab4c-d85313016b6c"  alt="채팅방 생성"> |
 
-<img src="https://github.com/6suk/6suk/assets/110910042/416d5e31-d25f-4c4d-ab4c-d85313016b6c"  alt="채팅방 생성">
-
-#### 2. 채팅방 삭제
-
-<img src="https://github.com/6suk/6suk/assets/110910042/9f7f29a9-8c0c-4fbd-b3a6-cdb6aace7fd5"  alt="채팅방 삭제">
-
-#### 3. 채팅방 삭제 (참여 시)
-참여 중인 채팅방이 삭제 되었다는 `toast`를 사용자에게 제공합니다.
-
-<img src="https://github.com/6suk/6suk/assets/110910042/086807b7-bc0e-4860-9cd5-88c43b6290d2"  alt="채팅방 삭제 (참여 시)">
+| 채팅방 삭제 | 채팅방 삭제 (참여 시) |
+| --- | --- |
+| <img src="https://github.com/6suk/6suk/assets/110910042/9f7f29a9-8c0c-4fbd-b3a6-cdb6aace7fd5"  alt="채팅방 삭제"> | <img src="https://github.com/6suk/6suk/assets/110910042/086807b7-bc0e-4860-9cd5-88c43b6290d2"  alt="채팅방 삭제 (참여 시)"> |
 
 <br><br>
 
@@ -49,15 +38,14 @@ Socket.IO를 활용해 실시간으로 채팅을 주고 받을 수 있습니다.
 
 온라인 및 오프라인 유저를 실시간으로 확인할 수 있습니다.
 
-#### 1. 로그인 (회원 가입)
-<img src="https://github.com/6suk/6suk/assets/110910042/f3549032-8024-4e13-ae90-c275fffcc946" alt="로그인">
+| 온라인/오프라인 |
+| --- |
+| <img src="https://github.com/6suk/6suk/assets/110910042/a5b45ee0-b1bf-4abb-bd62-26e34492f773" alt="오프라인 유저"> |
 
-#### 2. 오프라인
-<img src="https://github.com/6suk/6suk/assets/110910042/a5b45ee0-b1bf-4abb-bd62-26e34492f773" alt="오프라인 유저">
+| 로그인 | 로그아웃 (회원 탈퇴) |
+| --- | --- |
+| <img src="https://github.com/6suk/6suk/assets/110910042/f3549032-8024-4e13-ae90-c275fffcc946" alt="로그인"> | <img src="https://github.com/6suk/6suk/assets/110910042/abb8e33b-8071-4ccf-9a52-1215ba884ead" alt="로그아웃"> |
 
-
-#### 3. 로그아웃 (회원 탈퇴)
-<img src="https://github.com/6suk/6suk/assets/110910042/abb8e33b-8071-4ccf-9a52-1215ba884ead" alt="로그아웃">
 
 <br><br>
 
@@ -65,17 +53,12 @@ Socket.IO를 활용해 실시간으로 채팅을 주고 받을 수 있습니다.
 
 - 전역 상태관리(`Zustand`)를 통해 **불필요한 렌더링을 최소화**했습니다.
 - 컴포넌트 렌더링 상태를 시각적으로 확인할 수 있는 gif를 아래에 첨부하였습니다. (with. **React Developer Tools**) 
+- `Zustand`의 `subscribe`를 활용해 [🔗 채팅방 리스트의 알림 개선](https://www.notion.so/57674a1a23ac49b4a63425dce7b45258?pvs=21) 내용은 회고로 남겨두었습니다.
 
-#### 1. 메뉴 및 채팅방 렌더링
-<img src="https://github.com/6suk/6suk/assets/110910042/9cd06275-0179-4c3e-bae9-2321ca4c1e52" alt="렌더링 최적화">
+| 메뉴 및 채팅방 렌더링 | 실시간 채팅 / 알림 시 렌더링 |
+| --- | --- |
+| <img src="https://github.com/6suk/6suk/assets/110910042/9cd06275-0179-4c3e-bae9-2321ca4c1e52" alt="렌더링 최적화"> | <img src="https://github.com/6suk/6suk/assets/110910042/ddf17a8d-2759-42a3-9186-f1166f50cbf0" alt="렌더링 최적화 - 실시간 채팅"> |
 
-
-
-
-#### 2. 실시간 채팅 / 알림 시 렌더링
-`Zustand`의 `subscribe`를 활용해 [🔗 채팅방 리스트의 알림 개선](https://www.notion.so/57674a1a23ac49b4a63425dce7b45258?pvs=21) 내용은 회고로 남겨두었습니다.
-
-<img src="https://github.com/6suk/6suk/assets/110910042/ddf17a8d-2759-42a3-9186-f1166f50cbf0" alt="렌더링 최적화 - 실시간 채팅">
 
 
 <br><br>
@@ -97,12 +80,13 @@ Socket.IO를 활용해 실시간으로 채팅을 주고 받을 수 있습니다.
 
 ### 1. 환경 변수 설정
 #### /.env
+- 루트 폴더의 `.env`파일에 아래와 같이 환경 변수를 설정합니다.
+- Default 값은 `3000`으로 설정되어 있습니다.
+
+
 ```
-VITE_CLIENT_PORT=5173
 VITE_SERVER_PORT=3000
 ```
-- 루트 폴더의 `.env`파일에 위와 같이 환경 변수를 설정합니다.
-- 미설정 시 `client:5173` `server:3000`값이 기본으로 설정됩니다.
 
 <br>
 
@@ -116,21 +100,11 @@ VITE_SERVER_PORT=3000
 </summary>
 <div>
 
-##### 한 터미널에서 client와 server를 모두 실행 할 수 있습니다.
 ```bash
 yarn install
+```
+```bash
 yarn start
-```
-
-or
-
-##### 각각의 터미널에서 client / server를 실행할 수 있습니다.
-```bash
-yarn install
-yarn client start # client 실행
-```
-```bash
-yarn server start # server 실행
 ```
 </div>
 </details>
@@ -143,24 +117,12 @@ yarn server start # server 실행
 </summary>
 <div>
 
-##### 한 터미널에서 client와 server를 모두 실행 할 수 있습니다.
 ```bash
 npm install
+```
+```bash
 npm start
 ```
-
-or
-
-##### 각각의 터미널에서 client / server를 실행할 수 있습니다.
-```bash
-npm install
-cd client && npm start # client 실행
-```
-```bash
-cd server && npm start # server 실행
-```
-
-
 </div>
 </details>
 
@@ -169,7 +131,7 @@ cd server && npm start # server 실행
 ### 3. 웹사이트 접속
 
 ```
-http://localhost:{CLIENT_PORT}
+http://localhost:{PORT}
 ```
 
 <br><br>
@@ -177,7 +139,7 @@ http://localhost:{CLIENT_PORT}
 ## 🔸 REST API
 
 ```
-http://localhost:{SERVER_PORT}/api/{END_POINT}
+http://localhost:{PORT}/api/{END_POINT}
 ```
 
 ### ◽ User
@@ -328,6 +290,20 @@ Message Schema
 > 사이에 또 다른 요청이 추가된다면, 토큰 갱신 후 1번 > 2번 요청을 순차적으로 진행해야한다.
 
 #### [🔗 Axios의 기능들을 Fetch API로 구현해보기 더보기...](https://www.notion.so/Axios-Fetch-API-76f73773035a4e968789f11deb1031c2?pvs=21)
+
+<br><br>
+
+### 💌 성능 개선하기
+
+- **Accessibility** 89 → 100 / **SEO** 70 → 100 개선
+- **Performance** : **200ms** 개선 (First Contentful / Largest Contentful Paint, Speed Index)
+
+
+| 개선 전 | 개선 후 |
+| --- | --- |
+| ![개선 전](https://github.com/6suk/6suk/assets/110910042/f1ce3293-2fca-4338-bd1f-69f9a05ef67c) | ![개선 후](https://github.com/6suk/6suk/assets/110910042/ad90dfc8-ce68-4887-8518-5467965a4fd4) |
+
+#### [🔗 Lighthouse를 이용한 성능 측정 및 개선 더보기...](https://www.notion.so/57674a1a23ac49b4a63425dce7b45258?pvs=21)
 
 
 
